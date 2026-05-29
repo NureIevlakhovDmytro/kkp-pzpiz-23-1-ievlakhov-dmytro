@@ -1,0 +1,29 @@
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { loadConfig } from '../config/env';
+import { UserEntity } from '../entities/user.entity';
+import { UsersModule } from '../users/users.module';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { JwtStrategy } from './jwt.strategy';
+import { AdminSeeder } from './seed-admin';
+import { PasswordService } from './password.service';
+
+@Module({
+  imports: [
+    UsersModule,
+    PassportModule,
+    TypeOrmModule.forFeature([UserEntity]),
+    JwtModule.registerAsync({
+      useFactory: () => {
+        const cfg = loadConfig();
+        return { secret: cfg.jwt.secret, signOptions: { expiresIn: cfg.jwt.expiresIn } };
+      },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, AdminSeeder, PasswordService],
+})
+export class AuthModule {}
