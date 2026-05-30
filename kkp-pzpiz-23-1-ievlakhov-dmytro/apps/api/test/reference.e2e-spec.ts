@@ -56,4 +56,11 @@ describe('Reference dictionaries (e2e)', () => {
     const u = await request(app.getHttpServer()).post('/api/units').set(auth()).send({ code, name: 'Kilogram' }).expect(201);
     expect(u.body).toMatchObject({ code, name: 'Kilogram', isActive: true });
   });
+
+  it('creates a supplier and a storage location', async () => {
+    const s = await request(app.getHttpServer()).post('/api/suppliers').set(auth()).send({ name: `Sup-${Date.now()}`, contactInfo: 'x@y.z' }).expect(201);
+    expect(s.body).toMatchObject({ isActive: true });
+    const l = await request(app.getHttpServer()).post('/api/storage-locations').set(auth()).send({ name: `Loc-${Date.now()}`, description: 'fridge' }).expect(201);
+    expect(l.body).toMatchObject({ isActive: true });
+  });
 });
