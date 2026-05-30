@@ -1,4 +1,4 @@
-import type { DocumentStatus, InventoryStatus, WriteOffReasonCode } from '../enums';
+import type { AuditAction, DocumentStatus, InventoryStatus, NotificationType, WriteOffReasonCode } from '../enums';
 
 export interface WriteOffLineDto {
   id: string;
@@ -121,4 +121,25 @@ export interface StockMovementRowDto {
   batchId: string;
   locationId: string;
   quantityChange: number;
+}
+
+export interface NotificationDto {
+  id: string;
+  type: NotificationType;
+  payload: Record<string, unknown>;
+  productId: string | null;
+  batchId: string | null;
+  isRead: boolean;
+  resolvedAt: string | null;
+  createdAt: string;
+}
+
+export interface AuditLogDto {
+  id: string;
+  userId: string | null;
+  action: AuditAction;
+  entity: string | null;
+  entityId: string | null;
+  details: Record<string, unknown> | null;
+  createdAt: string;
 }
