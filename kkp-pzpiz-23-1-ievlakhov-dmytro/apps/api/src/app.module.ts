@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
+import { AuditModule } from './core/audit/audit.module';
 import { AuthModule } from './core/auth/auth.module';
 import { JwtAuthGuard } from './core/auth/jwt-auth.guard';
 import { RolesGuard } from './core/auth/roles.guard';
@@ -27,6 +28,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
     CommonModule,
     PersistenceModule,
     AuthModule,
+    AuditModule,
     ReferenceModule,
     ProductsModule,
     CurrencyModule,
