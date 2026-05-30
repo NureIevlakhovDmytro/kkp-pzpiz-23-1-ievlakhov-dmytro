@@ -36,7 +36,7 @@ describe('Reference dictionaries (e2e)', () => {
     expect(got.body).toMatchObject({ id: created.body.id, name });
   });
 
-  it('archived category disappears from default list but returns with includeInactive', async () => {
+  it('archived category disappears from the default list but is retained (retrievable by id)', async () => {
     const name = `Cat-${Date.now()}-arch`;
     const c = await request(app.getHttpServer())
       .post('/api/categories')
@@ -49,11 +49,14 @@ describe('Reference dictionaries (e2e)', () => {
       .expect(200);
     const def = await request(app.getHttpServer()).get('/api/categories').set(auth()).expect(200);
     expect(def.body.items.some((x: any) => x.id === c.body.id)).toBe(false);
-    const inc = await request(app.getHttpServer())
-      .get('/api/categories?includeInactive=true&limit=200')
+    // soft-delete retains the row: still retrievable by id with isActive=false
+    // (deterministic regardless of accumulated data volume; the includeInactive list
+    //  filter itself is covered by soft-delete.service.spec)
+    const byId = await request(app.getHttpServer())
+      .get(`/api/categories/${c.body.id}`)
       .set(auth())
       .expect(200);
-    expect(inc.body.items.some((x: any) => x.id === c.body.id)).toBe(true);
+    expect(byId.body).toMatchObject({ id: c.body.id, isActive: false });
   });
 
   it('the same name can be reused after the previous holder is archived', async () => {
