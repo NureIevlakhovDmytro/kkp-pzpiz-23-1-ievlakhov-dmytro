@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { CommonModule } from './common/common.module';
-import { PersistenceModule } from './persistence/persistence.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+
 import { AuthModule } from './auth/auth.module';
-import { ReferenceModule } from './reference/reference.module';
-import { ProductsModule } from './products/products.module';
-import { CurrencyModule } from './currency/currency.module';
-import { SettingsModule } from './settings/settings.module';
-import { SeedModule } from './seed/seed.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
+import { CommonModule } from './common/common.module';
+import { CurrencyModule } from './currency/currency.module';
+import { PersistenceModule } from './persistence/persistence.module';
+import { ProductsModule } from './products/products.module';
+import { ReferenceModule } from './reference/reference.module';
+import { SeedModule } from './seed/seed.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [

@@ -1,19 +1,32 @@
-import { SoftDeleteCrudService } from './soft-delete.service';
-import { AppException } from '../api-exception';
 import { ErrorCode } from '@app/shared';
-import { PaginationQueryDto } from '../dto/pagination.dto';
 
-interface Row { id: string; isActive: boolean; name: string; }
+import { AppException } from '../api-exception';
+import { PaginationQueryDto } from '../dto/pagination.dto';
+import { SoftDeleteCrudService } from './soft-delete.service';
+
+interface Row {
+  id: string;
+  isActive: boolean;
+  name: string;
+}
 
 function fakeRepo(rows: Row[]) {
   return {
-    findAndCount: jest.fn(async (opts: any) => {
-      const all = opts.where && opts.where.isActive ? rows.filter((r) => r.isActive) : rows;
-      return [all.slice(opts.skip, opts.skip + opts.take), all.length];
+    findAndCount: jest.fn((opts: any) => {
+      const all = opts.where?.isActive ? rows.filter((r) => r.isActive) : rows;
+      return Promise.resolve([all.slice(opts.skip, opts.skip + opts.take), all.length]);
     }),
-    findOne: jest.fn(async (opts: any) => rows.find((r) => r.id === opts.where.id) ?? null),
+    findOne: jest.fn((opts: any) =>
+      Promise.resolve(rows.find((r) => r.id === opts.where.id) ?? null),
+    ),
     create: jest.fn((d: any) => ({ ...d })),
-    save: jest.fn(async (e: any) => { if (!e.id) e.id = 'new'; const i = rows.findIndex((r) => r.id === e.id); if (i >= 0) rows[i] = e; else rows.push(e); return e; }),
+    save: jest.fn((e: any) => {
+      e.id ??= 'new';
+      const i = rows.findIndex((r) => r.id === e.id);
+      if (i >= 0) rows[i] = e;
+      else rows.push(e);
+      return Promise.resolve(e);
+    }),
   } as any;
 }
 
@@ -23,7 +36,10 @@ describe('SoftDeleteCrudService', () => {
   const q = Object.assign(new PaginationQueryDto(), { page: 1, limit: 20 });
 
   it('list() hides inactive by default and includes them when asked', async () => {
-    const rows: Row[] = [{ id: 'a', isActive: true, name: 'A' }, { id: 'b', isActive: false, name: 'B' }];
+    const rows: Row[] = [
+      { id: 'a', isActive: true, name: 'A' },
+      { id: 'b', isActive: false, name: 'B' },
+    ];
     const svc = new Svc(fakeRepo(rows), 'Row');
     expect((await svc.list(q, false)).total).toBe(1);
     expect((await svc.list(q, true)).total).toBe(2);
@@ -43,8 +59,14 @@ describe('SoftDeleteCrudService', () => {
 
   it('maps unique-violation (23505) on save to CONFLICT', async () => {
     const repo = fakeRepo([]);
-    repo.save = jest.fn(async () => { const e: any = new Error('dup'); e.code = '23505'; throw e; });
+    repo.save = jest.fn(() => {
+      const e = new Error('dup') as Error & { code: string };
+      e.code = '23505';
+      return Promise.reject(e);
+    });
     const svc = new Svc(repo, 'Row');
-    await expect(svc.create({ name: 'A', isActive: true } as any)).rejects.toMatchObject({ code: ErrorCode.CONFLICT });
+    await expect(svc.create({ name: 'A', isActive: true } as any)).rejects.toMatchObject({
+      code: ErrorCode.CONFLICT,
+    });
   });
 });

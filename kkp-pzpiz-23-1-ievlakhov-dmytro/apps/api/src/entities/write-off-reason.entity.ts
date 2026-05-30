@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { WriteOffReasonCode } from '@app/shared';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('write_off_reasons')
 export class WriteOffReasonEntity {

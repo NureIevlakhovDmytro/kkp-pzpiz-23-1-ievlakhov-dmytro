@@ -1,9 +1,14 @@
+import { Role } from '@app/shared';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Role } from '@app/shared';
+
 import { Roles } from '../auth/decorators';
+import {
+  CreateNamedDto,
+  IncludeInactiveQuery,
+  UpdateNamedDto,
+} from '../common/crud/dto/reference.dto';
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
-import { CreateNamedDto, IncludeInactiveQuery, UpdateNamedDto } from '../common/crud/dto/reference.dto';
 import { CategoriesService } from './categories.service';
 
 @ApiTags('categories')

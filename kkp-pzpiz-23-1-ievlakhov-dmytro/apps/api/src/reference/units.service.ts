@@ -1,11 +1,12 @@
+import { ErrorCode } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UnitEntity } from '../entities/unit.entity';
-import { ProductEntity } from '../entities/product.entity';
-import { SoftDeleteCrudService } from '../common/crud/soft-delete.service';
+
 import { AppException } from '../common/api-exception';
-import { ErrorCode } from '@app/shared';
+import { SoftDeleteCrudService } from '../common/crud/soft-delete.service';
+import { ProductEntity } from '../entities/product.entity';
+import { UnitEntity } from '../entities/unit.entity';
 
 @Injectable()
 export class UnitsService extends SoftDeleteCrudService<UnitEntity> {
@@ -18,6 +19,9 @@ export class UnitsService extends SoftDeleteCrudService<UnitEntity> {
 
   protected async assertArchivable(e: UnitEntity): Promise<void> {
     const count = await this.products.count({ where: { unitId: e.id, isActive: true } });
-    if (count > 0) throw new AppException(ErrorCode.CONFLICT, 'Unit is used by active products', { products: count });
+    if (count > 0)
+      throw new AppException(ErrorCode.CONFLICT, 'Unit is used by active products', {
+        products: count,
+      });
   }
 }

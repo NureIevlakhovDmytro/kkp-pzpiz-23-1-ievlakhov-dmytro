@@ -43,29 +43,29 @@ JWT bearer tokens (short TTL, configured via `JWT_EXPIRES_IN`). An ADMIN user is
 
 See `.env.example` at the repo root. Required:
 
-| Variable | Description |
-|---|---|
-| `POSTGRES_HOST` | DB host (default: `localhost`) |
-| `POSTGRES_PORT` | DB port (default: `5432`) |
-| `POSTGRES_USER` | DB user |
-| `POSTGRES_PASSWORD` | DB password |
-| `POSTGRES_DB` | Database name |
-| `API_PORT` | Listen port (default: `3000`) |
-| `JWT_SECRET` | Secret for signing JWT tokens |
-| `JWT_EXPIRES_IN` | Token TTL (default: `900s`) |
-| `ADMIN_EMAIL` | Seed admin email |
-| `ADMIN_PASSWORD` | Seed admin password |
-| `ADMIN_NAME` | Seed admin display name |
+| Variable            | Description                    |
+| ------------------- | ------------------------------ |
+| `POSTGRES_HOST`     | DB host (default: `localhost`) |
+| `POSTGRES_PORT`     | DB port (default: `5432`)      |
+| `POSTGRES_USER`     | DB user                        |
+| `POSTGRES_PASSWORD` | DB password                    |
+| `POSTGRES_DB`       | Database name                  |
+| `API_PORT`          | Listen port (default: `3000`)  |
+| `JWT_SECRET`        | Secret for signing JWT tokens  |
+| `JWT_EXPIRES_IN`    | Token TTL (default: `900s`)    |
+| `ADMIN_EMAIL`       | Seed admin email               |
+| `ADMIN_PASSWORD`    | Seed admin password            |
+| `ADMIN_NAME`        | Seed admin display name        |
 
 ## API endpoints
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| GET | `/api/health` | public | Health check |
-| POST | `/api/auth/login` | public | Obtain JWT token |
-| POST | `/api/auth/logout` | bearer | Session end (client discards token) |
-| GET | `/api/auth/me` | bearer | Current user profile |
-| PATCH | `/api/auth/me` | bearer | Update display name / locale |
-| POST | `/api/auth/change-password` | bearer | Change own password |
+| Method | Path                        | Auth   | Description                         |
+| ------ | --------------------------- | ------ | ----------------------------------- |
+| GET    | `/api/health`               | public | Health check                        |
+| POST   | `/api/auth/login`           | public | Obtain JWT token                    |
+| POST   | `/api/auth/logout`          | bearer | Session end (client discards token) |
+| GET    | `/api/auth/me`              | bearer | Current user profile                |
+| PATCH  | `/api/auth/me`              | bearer | Update display name / locale        |
+| POST   | `/api/auth/change-password` | bearer | Change own password                 |
 
 Full interactive docs: `http://localhost:3000/api/docs`

@@ -1,5 +1,5 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { ErrorCode } from '@app/shared';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 
 @Catch()
@@ -30,12 +30,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
 function mapStatusToCode(status: number): ErrorCode {
   switch (status) {
-    case 400: return ErrorCode.VALIDATION;
-    case 401: return ErrorCode.UNAUTHORIZED;
-    case 403: return ErrorCode.FORBIDDEN;
-    case 404: return ErrorCode.NOT_FOUND;
-    case 409: return ErrorCode.CONFLICT;
-    case 422: return ErrorCode.BUSINESS_RULE;
-    default: return ErrorCode.INTERNAL;
+    case 400:
+      return ErrorCode.VALIDATION;
+    case 401:
+      return ErrorCode.UNAUTHORIZED;
+    case 403:
+      return ErrorCode.FORBIDDEN;
+    case 404:
+      return ErrorCode.NOT_FOUND;
+    case 409:
+      return ErrorCode.CONFLICT;
+    case 422:
+      return ErrorCode.BUSINESS_RULE;
+    default:
+      return ErrorCode.INTERNAL;
   }
 }

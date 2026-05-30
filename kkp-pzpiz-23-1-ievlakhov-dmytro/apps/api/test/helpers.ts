@@ -1,5 +1,7 @@
+import type { INestApplication } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+
 import { AppModule } from '../src/app.module';
 
 export async function bootstrapTestApp(): Promise<INestApplication> {

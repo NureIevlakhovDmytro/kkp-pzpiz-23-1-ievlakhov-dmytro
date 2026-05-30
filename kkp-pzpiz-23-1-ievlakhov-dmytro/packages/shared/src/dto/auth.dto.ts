@@ -1,4 +1,4 @@
-import { Locale, Role } from '../enums';
+import type { Locale, Role } from '../enums';
 
 export interface LoginDto {
   email: string;

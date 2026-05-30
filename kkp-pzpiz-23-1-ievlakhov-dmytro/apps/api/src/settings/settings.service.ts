@@ -1,10 +1,11 @@
+import { ErrorCode } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { AppException } from '../common/api-exception';
 import { AppSettingsEntity } from '../entities/app-settings.entity';
 import { CurrencyEntity } from '../entities/currency.entity';
-import { AppException } from '../common/api-exception';
-import { ErrorCode } from '@app/shared';
 import { UpdateSettingsDto } from './dto/settings.dto';
 
 @Injectable()
@@ -32,7 +33,8 @@ export class SettingsService {
     }
     if (dto.nearExpiryDays !== undefined) s.nearExpiryDays = dto.nearExpiryDays;
     if (dto.lowStockCheckEnabled !== undefined) s.lowStockCheckEnabled = dto.lowStockCheckEnabled;
-    if (dto.nearExpiryCheckEnabled !== undefined) s.nearExpiryCheckEnabled = dto.nearExpiryCheckEnabled;
+    if (dto.nearExpiryCheckEnabled !== undefined)
+      s.nearExpiryCheckEnabled = dto.nearExpiryCheckEnabled;
     if (dto.backupSchedule !== undefined) s.backupSchedule = dto.backupSchedule;
     return this.repo.save(s);
   }

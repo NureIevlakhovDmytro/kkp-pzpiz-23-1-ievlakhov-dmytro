@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { CurrencyEntity } from '../entities/currency.entity';
 import { WriteOffReasonEntity } from '../entities/write-off-reason.entity';
-import { CurrenciesService } from './currencies.service';
 import { CurrenciesController } from './currencies.controller';
+import { CurrenciesService } from './currencies.service';
 import { WriteOffReasonsController } from './write-off-reasons.controller';
 
 @Module({

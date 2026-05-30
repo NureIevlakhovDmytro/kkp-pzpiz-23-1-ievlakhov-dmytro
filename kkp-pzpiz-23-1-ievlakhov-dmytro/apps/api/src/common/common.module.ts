@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
+
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { HealthController } from './health.controller';
 

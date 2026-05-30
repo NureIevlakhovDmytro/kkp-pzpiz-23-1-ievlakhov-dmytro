@@ -1,9 +1,28 @@
-import { WriteOffReasonCode } from '../enums';
+import type { WriteOffReasonCode } from '../enums';
 
-export interface CategoryDto { id: string; name: string; isActive: boolean; }
-export interface UnitDto { id: string; code: string; name: string; isActive: boolean; }
-export interface SupplierDto { id: string; name: string; contactInfo: string | null; isActive: boolean; }
-export interface StorageLocationDto { id: string; name: string; description: string | null; isActive: boolean; }
+export interface CategoryDto {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
+export interface UnitDto {
+  id: string;
+  code: string;
+  name: string;
+  isActive: boolean;
+}
+export interface SupplierDto {
+  id: string;
+  name: string;
+  contactInfo: string | null;
+  isActive: boolean;
+}
+export interface StorageLocationDto {
+  id: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+}
 
 export interface ProductDto {
   id: string;
@@ -16,8 +35,18 @@ export interface ProductDto {
   isActive: boolean;
 }
 
-export interface CurrencyDto { id: string; code: string; name: string; symbol: string | null; }
-export interface WriteOffReasonDto { id: string; code: WriteOffReasonCode; nameUk: string; nameEn: string; }
+export interface CurrencyDto {
+  id: string;
+  code: string;
+  name: string;
+  symbol: string | null;
+}
+export interface WriteOffReasonDto {
+  id: string;
+  code: WriteOffReasonCode;
+  nameUk: string;
+  nameEn: string;
+}
 
 export interface AppSettingsDto {
   nearExpiryDays: number;

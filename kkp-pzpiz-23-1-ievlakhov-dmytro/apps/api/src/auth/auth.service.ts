@@ -1,10 +1,11 @@
+import { ErrorCode, LoginResponse, MeDto } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+
+import { AppException } from '../common/api-exception';
+import { UserEntity } from '../entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { PasswordService } from './password.service';
-import { AppException } from '../common/api-exception';
-import { ErrorCode, LoginResponse, MeDto } from '@app/shared';
-import { UserEntity } from '../entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,12 @@ export class AuthService {
   }
 
   toMe(user: UserEntity): MeDto {
-    return { id: user.id, email: user.email, fullName: user.fullName, role: user.role, locale: user.locale };
+    return {
+      id: user.id,
+      email: user.email,
+      fullName: user.fullName,
+      role: user.role,
+      locale: user.locale,
+    };
   }
 }

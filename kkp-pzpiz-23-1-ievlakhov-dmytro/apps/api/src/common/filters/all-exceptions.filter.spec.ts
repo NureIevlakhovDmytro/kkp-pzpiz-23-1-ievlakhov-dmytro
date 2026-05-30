@@ -1,7 +1,9 @@
-import { AllExceptionsFilter } from './all-exceptions.filter';
-import { AppException } from '../api-exception';
 import { ErrorCode } from '@app/shared';
-import { NotFoundException, ArgumentsHost } from '@nestjs/common';
+import type { ArgumentsHost } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
+
+import { AppException } from '../api-exception';
+import { AllExceptionsFilter } from './all-exceptions.filter';
 
 function hostWithResponse() {
   const json = jest.fn();
@@ -19,7 +21,11 @@ describe('AllExceptionsFilter', () => {
     const { host, status, json } = hostWithResponse();
     filter.catch(new AppException(ErrorCode.CONFLICT, 'dup', { field: 'sku' }), host);
     expect(status).toHaveBeenCalledWith(409);
-    expect(json).toHaveBeenCalledWith({ code: ErrorCode.CONFLICT, message: 'dup', details: { field: 'sku' } });
+    expect(json).toHaveBeenCalledWith({
+      code: ErrorCode.CONFLICT,
+      message: 'dup',
+      details: { field: 'sku' },
+    });
   });
 
   it('maps built-in NotFoundException to NOT_FOUND code', () => {

@@ -1,15 +1,19 @@
-import { INestApplication } from '@nestjs/common';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+import type { INestApplication } from '@nestjs/common';
+
 const request = require('supertest');
-import { bootstrapTestApp } from './helpers';
 import { loadConfig } from '../src/config/env';
+import { bootstrapTestApp } from './helpers';
 
 describe('Auth (e2e)', () => {
   let app: INestApplication;
   const cfg = loadConfig();
 
-  beforeAll(async () => { app = await bootstrapTestApp(); });
-  afterAll(async () => { await app.close(); });
+  beforeAll(async () => {
+    app = await bootstrapTestApp();
+  });
+  afterAll(async () => {
+    await app.close();
+  });
 
   it('GET /api/health -> 200', async () => {
     await request(app.getHttpServer()).get('/api/health').expect(200);

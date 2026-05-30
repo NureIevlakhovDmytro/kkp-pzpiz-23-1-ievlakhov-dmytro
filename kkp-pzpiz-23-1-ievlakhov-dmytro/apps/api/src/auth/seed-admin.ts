@@ -1,10 +1,11 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { Locale, Role } from '@app/shared';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
+import { loadConfig } from '../config/env';
 import { UserEntity } from '../entities/user.entity';
 import { PasswordService } from './password.service';
-import { loadConfig } from '../config/env';
-import { Role, Locale } from '@app/shared';
 
 @Injectable()
 export class AdminSeeder implements OnModuleInit {

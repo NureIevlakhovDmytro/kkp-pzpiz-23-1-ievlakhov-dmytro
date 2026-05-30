@@ -7,5 +7,7 @@ export class AppSettingsEntity {
   @Column({ name: 'low_stock_check_enabled', default: true }) lowStockCheckEnabled: boolean;
   @Column({ name: 'near_expiry_check_enabled', default: true }) nearExpiryCheckEnabled: boolean;
   @Column({ name: 'base_currency_id', type: 'uuid' }) baseCurrencyId: string;
-  @Column({ name: 'backup_schedule', type: 'varchar', nullable: true }) backupSchedule: string | null;
+  @Column({ name: 'backup_schedule', type: 'varchar', nullable: true }) backupSchedule:
+    | string
+    | null;
 }

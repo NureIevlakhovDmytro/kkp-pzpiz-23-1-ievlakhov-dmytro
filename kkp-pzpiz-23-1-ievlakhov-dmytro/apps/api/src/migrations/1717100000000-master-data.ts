@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class MasterData1717100000000 implements MigrationInterface {
   name = 'MasterData1717100000000';
@@ -9,7 +9,9 @@ export class MasterData1717100000000 implements MigrationInterface {
       "name" varchar NOT NULL,
       "is_active" boolean NOT NULL DEFAULT true,
       CONSTRAINT "pk_categories" PRIMARY KEY ("id"))`);
-    await q.query(`CREATE UNIQUE INDEX "uq_categories_name_active" ON "categories" ("name") WHERE "is_active"`);
+    await q.query(
+      `CREATE UNIQUE INDEX "uq_categories_name_active" ON "categories" ("name") WHERE "is_active"`,
+    );
 
     await q.query(`CREATE TABLE "units" (
       "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -17,7 +19,9 @@ export class MasterData1717100000000 implements MigrationInterface {
       "name" varchar NOT NULL,
       "is_active" boolean NOT NULL DEFAULT true,
       CONSTRAINT "pk_units" PRIMARY KEY ("id"))`);
-    await q.query(`CREATE UNIQUE INDEX "uq_units_code_active" ON "units" ("code") WHERE "is_active"`);
+    await q.query(
+      `CREATE UNIQUE INDEX "uq_units_code_active" ON "units" ("code") WHERE "is_active"`,
+    );
 
     await q.query(`CREATE TABLE "suppliers" (
       "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -51,7 +55,9 @@ export class MasterData1717100000000 implements MigrationInterface {
       CONSTRAINT "uq_exchange_rate_currency_date" UNIQUE ("currency_id","effective_date"),
       CONSTRAINT "fk_exchange_rate_currency" FOREIGN KEY ("currency_id") REFERENCES "currencies"("id") ON DELETE RESTRICT)`);
 
-    await q.query(`CREATE TYPE "write_off_reason_code_enum" AS ENUM ('SPOILAGE','OVERPRODUCTION','RECEIVING_ERROR','BREAKAGE','SHORTAGE')`);
+    await q.query(
+      `CREATE TYPE "write_off_reason_code_enum" AS ENUM ('SPOILAGE','OVERPRODUCTION','RECEIVING_ERROR','BREAKAGE','SHORTAGE')`,
+    );
     await q.query(`CREATE TABLE "write_off_reasons" (
       "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
       "code" "write_off_reason_code_enum" NOT NULL,
@@ -75,7 +81,9 @@ export class MasterData1717100000000 implements MigrationInterface {
       CONSTRAINT "chk_products_min_stock" CHECK ("min_stock" >= 0),
       CONSTRAINT "fk_products_category" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE RESTRICT,
       CONSTRAINT "fk_products_unit" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE RESTRICT)`);
-    await q.query(`CREATE UNIQUE INDEX "uq_products_sku_active" ON "products" ("sku") WHERE "is_active" AND "sku" IS NOT NULL`);
+    await q.query(
+      `CREATE UNIQUE INDEX "uq_products_sku_active" ON "products" ("sku") WHERE "is_active" AND "sku" IS NOT NULL`,
+    );
     await q.query(`CREATE INDEX "idx_products_category" ON "products" ("category_id")`);
     await q.query(`CREATE INDEX "idx_products_unit" ON "products" ("unit_id")`);
 

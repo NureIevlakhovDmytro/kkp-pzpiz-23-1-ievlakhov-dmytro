@@ -1,10 +1,11 @@
+import { Locale } from '@app/shared';
 import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
-import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { Locale } from '@app/shared';
-import { AuthService } from './auth.service';
+import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+
 import { UsersService } from '../users/users.service';
+import { AuthService } from './auth.service';
 import { CurrentUser, JwtUser, Public } from './decorators';
 
 class LoginBody {
@@ -23,7 +24,10 @@ class ChangePasswordBody {
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService, private readonly users: UsersService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly users: UsersService,
+  ) {}
 
   @Public()
   @Throttle({ default: { limit: 5, ttl: 60_000 } })

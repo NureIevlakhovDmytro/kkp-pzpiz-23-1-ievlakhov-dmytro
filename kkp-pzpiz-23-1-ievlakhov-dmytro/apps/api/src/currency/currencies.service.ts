@@ -1,18 +1,25 @@
+import { ErrorCode } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CurrencyEntity } from '../entities/currency.entity';
+
 import { AppException } from '../common/api-exception';
-import { ErrorCode } from '@app/shared';
-import { PaginationQueryDto, paginate } from '../common/dto/pagination.dto';
+import { paginate, PaginationQueryDto } from '../common/dto/pagination.dto';
+import { CurrencyEntity } from '../entities/currency.entity';
 import { CreateCurrencyDto, UpdateCurrencyDto } from './dto/currency.dto';
 
 @Injectable()
 export class CurrenciesService {
-  constructor(@InjectRepository(CurrencyEntity) private readonly repo: Repository<CurrencyEntity>) {}
+  constructor(
+    @InjectRepository(CurrencyEntity) private readonly repo: Repository<CurrencyEntity>,
+  ) {}
 
   async list(q: PaginationQueryDto) {
-    const [items, total] = await this.repo.findAndCount({ skip: (q.page - 1) * q.limit, take: q.limit, order: { code: 'ASC' } });
+    const [items, total] = await this.repo.findAndCount({
+      skip: (q.page - 1) * q.limit,
+      take: q.limit,
+      order: { code: 'ASC' },
+    });
     return paginate(items, total, q);
   }
 

@@ -1,4 +1,4 @@
-import { ValueTransformer } from 'typeorm';
+import type { ValueTransformer } from 'typeorm';
 
 /** Maps PostgreSQL numeric (string) <-> JS number. Reused by all decimal columns. */
 export class ColumnNumericTransformer implements ValueTransformer {

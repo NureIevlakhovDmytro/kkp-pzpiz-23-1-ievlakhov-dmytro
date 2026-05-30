@@ -1,7 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import type { INestApplication } from '@nestjs/common';
 const request = require('supertest');
-import { bootstrapTestApp } from './helpers';
 import { loadConfig } from '../src/config/env';
+import { bootstrapTestApp } from './helpers';
 
 describe('Reference dictionaries (e2e)', () => {
   let app: INestApplication;
@@ -15,52 +15,102 @@ describe('Reference dictionaries (e2e)', () => {
       .send({ email: cfg.admin.email, password: cfg.admin.password });
     adminToken = res.body.token;
   });
-  afterAll(async () => { await app.close(); });
+  afterAll(async () => {
+    await app.close();
+  });
 
   const auth = () => ({ Authorization: `Bearer ${adminToken}` });
 
   it('ADMIN creates a category; any authed user can read it', async () => {
     const name = `Cat-${Date.now()}`;
-    const created = await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(201);
+    const created = await request(app.getHttpServer())
+      .post('/api/categories')
+      .set(auth())
+      .send({ name })
+      .expect(201);
     expect(created.body).toMatchObject({ name, isActive: true });
-    const got = await request(app.getHttpServer()).get(`/api/categories/${created.body.id}`).set(auth()).expect(200);
+    const got = await request(app.getHttpServer())
+      .get(`/api/categories/${created.body.id}`)
+      .set(auth())
+      .expect(200);
     expect(got.body).toMatchObject({ id: created.body.id, name });
   });
 
   it('archived category disappears from default list but returns with includeInactive', async () => {
     const name = `Cat-${Date.now()}-arch`;
-    const c = await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(201);
-    await request(app.getHttpServer()).delete(`/api/categories/${c.body.id}`).set(auth()).expect(200);
+    const c = await request(app.getHttpServer())
+      .post('/api/categories')
+      .set(auth())
+      .send({ name })
+      .expect(201);
+    await request(app.getHttpServer())
+      .delete(`/api/categories/${c.body.id}`)
+      .set(auth())
+      .expect(200);
     const def = await request(app.getHttpServer()).get('/api/categories').set(auth()).expect(200);
     expect(def.body.items.some((x: any) => x.id === c.body.id)).toBe(false);
-    const inc = await request(app.getHttpServer()).get('/api/categories?includeInactive=true&limit=200').set(auth()).expect(200);
+    const inc = await request(app.getHttpServer())
+      .get('/api/categories?includeInactive=true&limit=200')
+      .set(auth())
+      .expect(200);
     expect(inc.body.items.some((x: any) => x.id === c.body.id)).toBe(true);
   });
 
   it('the same name can be reused after the previous holder is archived', async () => {
     const name = `Cat-reuse-${Date.now()}`;
-    const a = await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(201);
-    await request(app.getHttpServer()).delete(`/api/categories/${a.body.id}`).set(auth()).expect(200);
-    await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(201);
+    const a = await request(app.getHttpServer())
+      .post('/api/categories')
+      .set(auth())
+      .send({ name })
+      .expect(201);
+    await request(app.getHttpServer())
+      .delete(`/api/categories/${a.body.id}`)
+      .set(auth())
+      .expect(200);
+    await request(app.getHttpServer())
+      .post('/api/categories')
+      .set(auth())
+      .send({ name })
+      .expect(201);
   });
 
   it('duplicate active name is rejected with 409', async () => {
     const name = `Cat-dup-${Date.now()}`;
-    await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(201);
-    const dup = await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(409);
+    await request(app.getHttpServer())
+      .post('/api/categories')
+      .set(auth())
+      .send({ name })
+      .expect(201);
+    const dup = await request(app.getHttpServer())
+      .post('/api/categories')
+      .set(auth())
+      .send({ name })
+      .expect(409);
     expect(dup.body.code).toBe('CONFLICT');
   });
 
   it('creates a unit (code+name)', async () => {
     const code = `u${Date.now()}`;
-    const u = await request(app.getHttpServer()).post('/api/units').set(auth()).send({ code, name: 'Kilogram' }).expect(201);
+    const u = await request(app.getHttpServer())
+      .post('/api/units')
+      .set(auth())
+      .send({ code, name: 'Kilogram' })
+      .expect(201);
     expect(u.body).toMatchObject({ code, name: 'Kilogram', isActive: true });
   });
 
   it('creates a supplier and a storage location', async () => {
-    const s = await request(app.getHttpServer()).post('/api/suppliers').set(auth()).send({ name: `Sup-${Date.now()}`, contactInfo: 'x@y.z' }).expect(201);
+    const s = await request(app.getHttpServer())
+      .post('/api/suppliers')
+      .set(auth())
+      .send({ name: `Sup-${Date.now()}`, contactInfo: 'x@y.z' })
+      .expect(201);
     expect(s.body).toMatchObject({ isActive: true });
-    const l = await request(app.getHttpServer()).post('/api/storage-locations').set(auth()).send({ name: `Loc-${Date.now()}`, description: 'fridge' }).expect(201);
+    const l = await request(app.getHttpServer())
+      .post('/api/storage-locations')
+      .set(auth())
+      .send({ name: `Loc-${Date.now()}`, description: 'fridge' })
+      .expect(201);
     expect(l.body).toMatchObject({ isActive: true });
   });
 });

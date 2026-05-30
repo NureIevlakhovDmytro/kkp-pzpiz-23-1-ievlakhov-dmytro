@@ -1,12 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { IsOptional, IsUUID } from 'class-validator';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Role } from '@app/shared';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { IsOptional, IsUUID } from 'class-validator';
+
 import { Roles } from '../auth/decorators';
-import { PaginationQueryDto } from '../common/dto/pagination.dto';
 import { IncludeInactiveQuery } from '../common/crud/dto/reference.dto';
-import { ProductsService } from './products.service';
+import { PaginationQueryDto } from '../common/dto/pagination.dto';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
+import { ProductsService } from './products.service';
 
 class ProductFilter extends IncludeInactiveQuery {
   @IsOptional() @IsUUID() categoryId?: string;

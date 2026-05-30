@@ -1,12 +1,13 @@
+import { ErrorCode } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductEntity } from '../entities/product.entity';
-import { CategoryEntity } from '../entities/category.entity';
-import { UnitEntity } from '../entities/unit.entity';
-import { SoftDeleteCrudService } from '../common/crud/soft-delete.service';
+
 import { AppException } from '../common/api-exception';
-import { ErrorCode } from '@app/shared';
+import { SoftDeleteCrudService } from '../common/crud/soft-delete.service';
+import { CategoryEntity } from '../entities/category.entity';
+import { ProductEntity } from '../entities/product.entity';
+import { UnitEntity } from '../entities/unit.entity';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 
 @Injectable()

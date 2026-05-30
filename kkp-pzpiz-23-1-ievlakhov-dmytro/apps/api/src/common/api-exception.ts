@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { ErrorCode } from '@app/shared';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 const STATUS_BY_CODE: Record<ErrorCode, HttpStatus> = {
   [ErrorCode.VALIDATION]: HttpStatus.BAD_REQUEST,

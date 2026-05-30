@@ -1,5 +1,7 @@
 import 'reflect-metadata';
+
 import { DataSource } from 'typeorm';
+
 import { loadConfig } from './config/env';
 
 const cfg = loadConfig();
