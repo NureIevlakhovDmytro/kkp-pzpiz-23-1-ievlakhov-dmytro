@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import { AppException } from '../common/api-exception';
 import { AppSettingsEntity } from '../entities/app-settings.entity';
+import { BatchEntity } from '../entities/batch.entity';
 import { CurrencyEntity } from '../entities/currency.entity';
 import { UpdateSettingsDto } from './dto/settings.dto';
 
@@ -13,6 +14,7 @@ export class SettingsService {
   constructor(
     @InjectRepository(AppSettingsEntity) private readonly repo: Repository<AppSettingsEntity>,
     @InjectRepository(CurrencyEntity) private readonly currencies: Repository<CurrencyEntity>,
+    @InjectRepository(BatchEntity) private readonly batches: Repository<BatchEntity>,
   ) {}
 
   async get(): Promise<AppSettingsEntity> {
@@ -26,9 +28,10 @@ export class SettingsService {
     if (dto.baseCurrencyId && dto.baseCurrencyId !== s.baseCurrencyId) {
       const c = await this.currencies.findOne({ where: { id: dto.baseCurrencyId } });
       if (!c) throw new AppException(ErrorCode.NOT_FOUND, 'Base currency not found');
-      // NOTE: spec §2 makes base currency immutable after the first valued operation.
-      // No valued operations exist yet (no batches/receipts in this plan), so switching is allowed here.
-      // The "freeze after first valued op" guard is added in Plan 3/4 when batches exist.
+      const batchCount = await this.batches.count();
+      if (batchCount > 0) {
+        throw new AppException(ErrorCode.CONFLICT, 'Base currency is frozen after the first valued operation');
+      }
       s.baseCurrencyId = dto.baseCurrencyId;
     }
     if (dto.nearExpiryDays !== undefined) s.nearExpiryDays = dto.nearExpiryDays;
