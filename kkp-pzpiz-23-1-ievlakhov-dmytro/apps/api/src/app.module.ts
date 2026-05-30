@@ -13,6 +13,7 @@ import { PersistenceModule } from './persistence/persistence.module';
 import { ProductsModule } from './products/products.module';
 import { ReceiptsModule } from './receipts/receipts.module';
 import { ReferenceModule } from './reference/reference.module';
+import { ReportsModule } from './reports/reports.module';
 import { SeedModule } from './seed/seed.module';
 import { SettingsModule } from './settings/settings.module';
 import { StockModule } from './stock/stock.module';
@@ -34,6 +35,7 @@ import { WriteOffsModule } from './write-offs/write-offs.module';
     ReceiptsModule,
     WriteOffsModule,
     InventoryModule,
+    ReportsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
