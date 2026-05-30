@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 import { CommonModule } from './common/common.module';
 import { CurrencyModule } from './currency/currency.module';
+import { InventoryModule } from './inventory/inventory.module';
 import { PersistenceModule } from './persistence/persistence.module';
 import { ProductsModule } from './products/products.module';
 import { ReceiptsModule } from './receipts/receipts.module';
@@ -32,6 +33,7 @@ import { WriteOffsModule } from './write-offs/write-offs.module';
     StockModule,
     ReceiptsModule,
     WriteOffsModule,
+    InventoryModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

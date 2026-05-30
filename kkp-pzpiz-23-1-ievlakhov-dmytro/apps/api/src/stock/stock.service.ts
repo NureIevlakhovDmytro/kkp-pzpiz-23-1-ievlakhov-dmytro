@@ -36,6 +36,17 @@ export class StockService {
     await repo.save(level);
   }
 
+  /** Set a (batch, location) stock row to an absolute target under a row lock; returns the applied delta (target − current). */
+  async setQuantity(manager: EntityManager, batchId: string, locationId: string, target: number): Promise<number> {
+    const repo = manager.getRepository(StockLevelEntity);
+    let level = await repo.findOne({ where: { batchId, locationId }, lock: { mode: 'pessimistic_write' } });
+    const current = level ? level.quantity : 0;
+    level ??= repo.create({ batchId, locationId, quantity: 0 });
+    level.quantity = target;
+    await repo.save(level);
+    return target - current;
+  }
+
   async totalQuantityAtLocation(locationId: string): Promise<number> {
     const row = (await this.stock
       .createQueryBuilder('s')
