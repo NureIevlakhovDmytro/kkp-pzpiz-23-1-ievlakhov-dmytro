@@ -18,3 +18,12 @@ export enum ErrorCode {
   BUSINESS_RULE = 'BUSINESS_RULE',   // 422
   INTERNAL = 'INTERNAL',             // 500
 }
+
+/** Fixed write-off reason codes (★ unique part). Seeded, read-only dictionary. */
+export enum WriteOffReasonCode {
+  SPOILAGE = 'SPOILAGE',
+  OVERPRODUCTION = 'OVERPRODUCTION',
+  RECEIVING_ERROR = 'RECEIVING_ERROR',
+  BREAKAGE = 'BREAKAGE',
+  SHORTAGE = 'SHORTAGE',
+}
