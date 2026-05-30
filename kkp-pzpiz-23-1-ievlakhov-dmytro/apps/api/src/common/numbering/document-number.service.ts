@@ -5,7 +5,7 @@ import type { EntityManager } from 'typeorm';
 @Injectable()
 export class DocumentNumberService {
   async next(manager: EntityManager, sequence: string, prefix: string): Promise<string> {
-    const rows = (await manager.query(`SELECT nextval($1) AS value`, [sequence])) as { value: string }[];
+    const rows: { value: string }[] = await manager.query(`SELECT nextval($1) AS value`, [sequence]);
     return `${prefix}-${String(rows[0].value).padStart(6, '0')}`;
   }
 }
