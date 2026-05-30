@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CategoryEntity } from '../entities/category.entity';
 import { ProductEntity } from '../entities/product.entity';
+import { StockLevelEntity } from '../entities/stock-level.entity';
 import { StorageLocationEntity } from '../entities/storage-location.entity';
 import { SupplierEntity } from '../entities/supplier.entity';
 import { UnitEntity } from '../entities/unit.entity';
@@ -23,6 +24,7 @@ import { UnitsService } from './units.service';
       ProductEntity,
       SupplierEntity,
       StorageLocationEntity,
+      StockLevelEntity,
     ]),
   ],
   controllers: [

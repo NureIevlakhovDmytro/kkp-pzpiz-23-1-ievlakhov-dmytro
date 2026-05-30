@@ -13,6 +13,7 @@ import { ProductsModule } from './products/products.module';
 import { ReferenceModule } from './reference/reference.module';
 import { SeedModule } from './seed/seed.module';
 import { SettingsModule } from './settings/settings.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { SettingsModule } from './settings/settings.module';
     CurrencyModule,
     SettingsModule,
     SeedModule,
+    StockModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
