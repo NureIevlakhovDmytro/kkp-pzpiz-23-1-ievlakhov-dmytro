@@ -42,4 +42,9 @@ describe('deriveAuditAction', () => {
     expect(deriveAuditAction('PATCH', '/api/admin/users/abc')).toBe(AuditAction.USER_ROLE_CHANGED);
     expect(deriveAuditAction('DELETE', '/api/admin/users/abc')).toBe(AuditAction.USER_ANONYMIZED);
   });
+
+  it('maps PD self-service', () => {
+    expect(deriveAuditAction('GET', '/api/me/export')).toBe(AuditAction.PD_EXPORTED);
+    expect(deriveAuditAction('DELETE', '/api/me')).toBe(AuditAction.PD_ERASED);
+  });
 });

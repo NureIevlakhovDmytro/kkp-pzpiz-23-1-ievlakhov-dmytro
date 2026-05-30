@@ -9,6 +9,7 @@ import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
+import { MeController } from './me.controller';
 import { PasswordService } from './password.service';
 import { AdminSeeder } from './seed-admin';
 
@@ -24,7 +25,7 @@ import { AdminSeeder } from './seed-admin';
       },
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, MeController],
   providers: [AuthService, JwtStrategy, AdminSeeder, PasswordService],
 })
 export class AuthModule {}
