@@ -16,9 +16,23 @@ NestJS + TypeORM + PostgreSQL backend. Infrastructure spine for the warehouse ca
 
 ## Build + run production
 
+> **Note:** `@app/shared` must be compiled to `packages/shared/dist/` before the API is started or built,
+> because the workspace symlink resolves `@app/shared` via `package.json` `"main": "dist/index.js"` at runtime.
+> The scripts below handle this automatically — always prefer them over invoking `nest build` directly.
+
 ```bash
-npm run build -w @app/api
+# Builds @app/shared first, then the API:
+npm run build          # from repo root
+
+# Start the compiled API:
 npm run start -w @app/api   # runs node dist/main.js
+```
+
+If you build the API workspace in isolation, build shared first:
+
+```bash
+npm run build:shared   # from repo root
+npm run build -w @app/api
 ```
 
 ## Auth
