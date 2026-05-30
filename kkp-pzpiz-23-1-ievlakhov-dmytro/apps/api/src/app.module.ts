@@ -9,6 +9,7 @@ import { ReferenceModule } from './reference/reference.module';
 import { ProductsModule } from './products/products.module';
 import { CurrencyModule } from './currency/currency.module';
 import { SettingsModule } from './settings/settings.module';
+import { SeedModule } from './seed/seed.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
@@ -23,6 +24,7 @@ import { RolesGuard } from './auth/roles.guard';
     ProductsModule,
     CurrencyModule,
     SettingsModule,
+    SeedModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
