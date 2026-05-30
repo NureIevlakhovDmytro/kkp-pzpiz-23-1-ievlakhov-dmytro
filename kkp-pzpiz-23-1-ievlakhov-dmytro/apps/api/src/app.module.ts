@@ -10,6 +10,7 @@ import { JwtAuthGuard } from './core/auth/jwt-auth.guard';
 import { RolesGuard } from './core/auth/roles.guard';
 import { CommonModule } from './core/common/common.module';
 import { PersistenceModule } from './core/database/persistence.module';
+import { BackupModule } from './modules/backup/backup.module';
 import { CurrencyModule } from './modules/currency/currency.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
@@ -46,6 +47,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
     TransfersModule,
     NotificationsModule,
     UserManagementModule,
+    BackupModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

@@ -47,4 +47,8 @@ describe('deriveAuditAction', () => {
     expect(deriveAuditAction('GET', '/api/me/export')).toBe(AuditAction.PD_EXPORTED);
     expect(deriveAuditAction('DELETE', '/api/me')).toBe(AuditAction.PD_ERASED);
   });
+
+  it('maps backup', () => {
+    expect(deriveAuditAction('POST', '/api/admin/backup')).toBe(AuditAction.BACKUP_CREATED);
+  });
 });

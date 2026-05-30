@@ -69,3 +69,9 @@ See `.env.example` at the repo root. Required:
 | POST   | `/api/auth/change-password` | bearer | Change own password                 |
 
 Full interactive docs: `http://localhost:3000/api/docs`
+
+## Backup & restore
+
+- **Backup:** `POST /api/admin/backup` (ADMIN) runs `pg_dump` (plain SQL) into `backups/` and returns `{ file, sizeBytes, createdAt }`. Requires the `pg_dump` client tool on PATH (e.g. `brew install libpq && brew link --force libpq`, or the `postgresql-client` package).
+- **Restore (manual runbook — intentionally NOT an API):** restoring overwrites the live database, so it is a deliberate operator action:
+  `psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DB -f backups/<file>.sql`

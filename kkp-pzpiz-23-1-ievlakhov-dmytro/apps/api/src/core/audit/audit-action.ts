@@ -17,6 +17,7 @@ export function deriveAuditAction(method: string, path: string): AuditAction | n
     return AuditAction.USER_ANONYMIZED;
   if (method === 'GET' && path.endsWith('/me/export')) return AuditAction.PD_EXPORTED;
   if (method === 'DELETE' && path.endsWith('/me')) return AuditAction.PD_ERASED;
+  if (method === 'POST' && path.endsWith('/admin/backup')) return AuditAction.BACKUP_CREATED;
   if (method === 'POST' && OPERATION.test(path)) return AuditAction.DOCUMENT_POSTED;
   if (
     (method === 'POST' || method === 'PATCH' || method === 'DELETE') &&
