@@ -1,4 +1,4 @@
-import { DocumentStatus } from '../enums';
+import type { DocumentStatus } from '../enums';
 
 export interface BatchDto {
   id: string;
