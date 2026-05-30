@@ -10,6 +10,7 @@ import { CommonModule } from './common/common.module';
 import { CurrencyModule } from './currency/currency.module';
 import { PersistenceModule } from './persistence/persistence.module';
 import { ProductsModule } from './products/products.module';
+import { ReceiptsModule } from './receipts/receipts.module';
 import { ReferenceModule } from './reference/reference.module';
 import { SeedModule } from './seed/seed.module';
 import { SettingsModule } from './settings/settings.module';
@@ -28,6 +29,7 @@ import { StockModule } from './stock/stock.module';
     SettingsModule,
     SeedModule,
     StockModule,
+    ReceiptsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
