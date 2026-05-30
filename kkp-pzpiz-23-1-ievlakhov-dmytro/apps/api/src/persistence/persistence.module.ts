@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { loadConfig } from '../config/env';
-import { UserEntity } from '../entities/user.entity';
 
 @Module({
   imports: [
@@ -15,7 +14,7 @@ import { UserEntity } from '../entities/user.entity';
           username: cfg.db.user,
           password: cfg.db.password,
           database: cfg.db.database,
-          entities: [UserEntity],
+          autoLoadEntities: true,
           synchronize: false,
           migrationsRun: false,
         };
