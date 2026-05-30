@@ -1,4 +1,10 @@
-import type { AuditAction, DocumentStatus, InventoryStatus, NotificationType, WriteOffReasonCode } from '../enums';
+import type {
+  AuditAction,
+  DocumentStatus,
+  InventoryStatus,
+  NotificationType,
+  WriteOffReasonCode,
+} from '../enums';
 
 export interface WriteOffLineDto {
   id: string;
