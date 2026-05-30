@@ -23,21 +23,32 @@ export class InventoryService {
     private readonly dataSource: DataSource,
     private readonly numbers: DocumentNumberService,
     private readonly stock: StockService,
-    @InjectRepository(InventoryCountEntity) private readonly counts: Repository<InventoryCountEntity>,
-    @InjectRepository(InventoryCountLineEntity) private readonly lines: Repository<InventoryCountLineEntity>,
-    @InjectRepository(StockAdjustmentEntity) private readonly adjustments: Repository<StockAdjustmentEntity>,
+    @InjectRepository(InventoryCountEntity)
+    private readonly counts: Repository<InventoryCountEntity>,
+    @InjectRepository(InventoryCountLineEntity)
+    private readonly lines: Repository<InventoryCountLineEntity>,
+    @InjectRepository(StockAdjustmentEntity)
+    private readonly adjustments: Repository<StockAdjustmentEntity>,
   ) {}
 
   async create(dto: CreateInventoryDto, userId: string): Promise<InventoryCountEntity> {
     return this.dataSource.transaction(async (manager) => {
-      const location = await manager.getRepository(StorageLocationEntity).findOne({ where: { id: dto.locationId } });
+      const location = await manager
+        .getRepository(StorageLocationEntity)
+        .findOne({ where: { id: dto.locationId } });
       if (!location) throw new AppException(ErrorCode.NOT_FOUND, 'Location not found');
-      if (!location.isActive) throw new AppException(ErrorCode.BUSINESS_RULE, 'Location is archived');
+      if (!location.isActive)
+        throw new AppException(ErrorCode.BUSINESS_RULE, 'Location is archived');
 
       const open = await manager.getRepository(InventoryCountEntity).findOne({
         where: { locationId: dto.locationId, status: InventoryStatus.DRAFT },
       });
-      if (open) throw new AppException(ErrorCode.CONFLICT, 'An open inventory already exists for this location', { inventoryId: open.id });
+      if (open)
+        throw new AppException(
+          ErrorCode.CONFLICT,
+          'An open inventory already exists for this location',
+          { inventoryId: open.id },
+        );
 
       const number = await this.numbers.next(manager, 'inventory_number_seq', 'INV');
       const count = await manager.getRepository(InventoryCountEntity).save(
@@ -84,15 +95,22 @@ export class InventoryService {
       }
 
       for (const entry of dto.counts) {
-        const batch = await manager.getRepository(BatchEntity).findOne({ where: { id: entry.batchId } });
-        if (!batch) throw new AppException(ErrorCode.NOT_FOUND, 'Batch not found', { batchId: entry.batchId });
+        const batch = await manager
+          .getRepository(BatchEntity)
+          .findOne({ where: { id: entry.batchId } });
+        if (!batch)
+          throw new AppException(ErrorCode.NOT_FOUND, 'Batch not found', {
+            batchId: entry.batchId,
+          });
 
         let line = await manager.getRepository(InventoryCountLineEntity).findOne({
           where: { inventoryId: id, batchId: entry.batchId },
         });
         if (!line) {
           // A batch found at the location but absent from the snapshot (e.g. a surplus): expected = current book qty (or 0).
-          const level = await manager.getRepository(StockLevelEntity).findOne({ where: { batchId: entry.batchId, locationId: count.locationId } });
+          const level = await manager
+            .getRepository(StockLevelEntity)
+            .findOne({ where: { batchId: entry.batchId, locationId: count.locationId } });
           const expected = level ? level.quantity : 0;
           line = manager.getRepository(InventoryCountLineEntity).create({
             inventoryId: id,
@@ -114,18 +132,25 @@ export class InventoryService {
 
   async complete(id: string, userId: string): Promise<InventoryCountEntity> {
     return this.dataSource.transaction(async (manager) => {
-      const count = await manager.getRepository(InventoryCountEntity).findOne({ where: { id }, relations: { lines: true } });
+      const count = await manager
+        .getRepository(InventoryCountEntity)
+        .findOne({ where: { id }, relations: { lines: true } });
       if (!count) throw new AppException(ErrorCode.NOT_FOUND, 'Inventory not found');
       if (count.status !== InventoryStatus.DRAFT) {
         throw new AppException(ErrorCode.CONFLICT, 'Inventory already completed');
       }
       const uncounted = count.lines.filter((l) => l.actualQty === null);
       if (uncounted.length > 0) {
-        throw new AppException(ErrorCode.CONFLICT, 'Some lines are not counted', { uncountedBatchIds: uncounted.map((l) => l.batchId) });
+        throw new AppException(ErrorCode.CONFLICT, 'Some lines are not counted', {
+          uncountedBatchIds: uncounted.map((l) => l.batchId),
+        });
       }
 
-      const shortageReason = await manager.getRepository(WriteOffReasonEntity).findOne({ where: { code: WriteOffReasonCode.SHORTAGE } });
-      if (!shortageReason) throw new AppException(ErrorCode.NOT_FOUND, 'SHORTAGE reason not seeded');
+      const shortageReason = await manager
+        .getRepository(WriteOffReasonEntity)
+        .findOne({ where: { code: WriteOffReasonCode.SHORTAGE } });
+      if (!shortageReason)
+        throw new AppException(ErrorCode.NOT_FOUND, 'SHORTAGE reason not seeded');
 
       const number = await this.numbers.next(manager, 'adjustment_number_seq', 'ADJ');
       const adjustment = await manager.getRepository(StockAdjustmentEntity).save(
@@ -141,7 +166,12 @@ export class InventoryService {
       for (const line of count.lines) {
         const target = line.actualQty!;
         // Re-read current under lock and set to actual; appliedDelta = actual − current (NOT actual − expected_snapshot).
-        const appliedDelta = await this.stock.setQuantity(manager, line.batchId, count.locationId, target);
+        const appliedDelta = await this.stock.setQuantity(
+          manager,
+          line.batchId,
+          count.locationId,
+          target,
+        );
         line.discrepancy = target - line.expectedQty; // analytical figure vs the snapshot
         await manager.getRepository(InventoryCountLineEntity).save(line);
         if (appliedDelta !== 0) {
@@ -164,7 +194,10 @@ export class InventoryService {
   }
 
   async list(q: PaginationQueryDto, locationId?: string, status?: string) {
-    const qb = this.counts.createQueryBuilder('i').orderBy('i.date', 'DESC').addOrderBy('i.created_at', 'DESC');
+    const qb = this.counts
+      .createQueryBuilder('i')
+      .orderBy('i.date', 'DESC')
+      .addOrderBy('i.created_at', 'DESC');
     if (locationId) qb.andWhere('i.location_id = :locationId', { locationId });
     if (status) qb.andWhere('i.status = :status', { status });
     qb.skip((q.page - 1) * q.limit).take(q.limit);
@@ -180,7 +213,9 @@ export class InventoryService {
   }
 
   private async loadInTx(manager: EntityManager, id: string): Promise<InventoryCountEntity> {
-    const c = await manager.getRepository(InventoryCountEntity).findOne({ where: { id }, relations: { lines: true } });
+    const c = await manager
+      .getRepository(InventoryCountEntity)
+      .findOne({ where: { id }, relations: { lines: true } });
     if (!c) throw new AppException(ErrorCode.NOT_FOUND, 'Inventory not found');
     return c;
   }

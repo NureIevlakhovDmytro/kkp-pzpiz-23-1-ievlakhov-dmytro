@@ -18,7 +18,13 @@ export class InventoryCountLineEntity {
   @Column({ name: 'batch_id', type: 'uuid' })
   batchId: string;
 
-  @Column({ name: 'expected_qty', type: 'numeric', precision: 14, scale: 3, transformer: new ColumnNumericTransformer() })
+  @Column({
+    name: 'expected_qty',
+    type: 'numeric',
+    precision: 14,
+    scale: 3,
+    transformer: new ColumnNumericTransformer(),
+  })
   expectedQty: number;
 
   @Column({

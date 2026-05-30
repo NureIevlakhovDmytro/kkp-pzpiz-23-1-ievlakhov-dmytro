@@ -13,7 +13,14 @@ import { ExchangeRatesService } from './exchange-rates.service';
 import { WriteOffReasonsController } from './write-off-reasons.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CurrencyEntity, WriteOffReasonEntity, ExchangeRateEntity, AppSettingsEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      CurrencyEntity,
+      WriteOffReasonEntity,
+      ExchangeRateEntity,
+      AppSettingsEntity,
+    ]),
+  ],
   controllers: [CurrenciesController, WriteOffReasonsController, ExchangeRatesController],
   providers: [CurrenciesService, ExchangeRatesService, CurrencyConverterService],
   exports: [CurrenciesService, CurrencyConverterService],

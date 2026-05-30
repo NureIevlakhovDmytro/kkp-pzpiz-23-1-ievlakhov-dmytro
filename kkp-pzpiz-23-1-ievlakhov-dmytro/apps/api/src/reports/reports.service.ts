@@ -27,9 +27,12 @@ interface LossLine {
 export class ReportsService {
   constructor(
     private readonly converter: CurrencyConverterService,
-    @InjectRepository(WriteOffReasonEntity) private readonly reasons: Repository<WriteOffReasonEntity>,
-    @InjectRepository(InventoryCountEntity) private readonly counts: Repository<InventoryCountEntity>,
-    @InjectRepository(StockAdjustmentEntity) private readonly adjustments: Repository<StockAdjustmentEntity>,
+    @InjectRepository(WriteOffReasonEntity)
+    private readonly reasons: Repository<WriteOffReasonEntity>,
+    @InjectRepository(InventoryCountEntity)
+    private readonly counts: Repository<InventoryCountEntity>,
+    @InjectRepository(StockAdjustmentEntity)
+    private readonly adjustments: Repository<StockAdjustmentEntity>,
     @InjectRepository(BatchEntity) private readonly batches: Repository<BatchEntity>,
   ) {}
 
@@ -76,7 +79,12 @@ export class ReportsService {
     let rateMissing = false;
 
     for (const line of all) {
-      const { base, rateMissing: missing } = await this.converter.convert(Number(line.amount), line.currencyId, line.date, baseCurrencyId);
+      const { base, rateMissing: missing } = await this.converter.convert(
+        Number(line.amount),
+        line.currencyId,
+        line.date,
+        baseCurrencyId,
+      );
       if (missing) rateMissing = true;
       byReason.set(line.reasonId, (byReason.get(line.reasonId) ?? 0) + base);
     }
@@ -107,7 +115,10 @@ export class ReportsService {
     if (!count) throw new AppException(ErrorCode.NOT_FOUND, 'Inventory not found');
     const baseCurrencyId = await this.converter.baseCurrencyId();
 
-    const adjustment = await this.adjustments.findOne({ where: { inventoryId }, relations: { lines: true } });
+    const adjustment = await this.adjustments.findOne({
+      where: { inventoryId },
+      relations: { lines: true },
+    });
     let shortageCount = 0;
     let surplusCount = 0;
     let shortageTotalBase = 0;
@@ -119,7 +130,12 @@ export class ReportsService {
         const batch = await this.batches.findOne({ where: { id: line.batchId } });
         const unitCost = batch ? batch.unitCost : 0;
         const currencyId = batch ? batch.currencyId : baseCurrencyId;
-        const { base, rateMissing: missing } = await this.converter.convert(Math.abs(line.delta) * unitCost, currencyId, count.date, baseCurrencyId);
+        const { base, rateMissing: missing } = await this.converter.convert(
+          Math.abs(line.delta) * unitCost,
+          currencyId,
+          count.date,
+          baseCurrencyId,
+        );
         if (missing) rateMissing = true;
         if (line.delta < 0) {
           shortageCount += 1;

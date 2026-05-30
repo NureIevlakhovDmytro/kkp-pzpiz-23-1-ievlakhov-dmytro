@@ -54,7 +54,9 @@ export class StarOperations1717300000000 implements MigrationInterface {
       CONSTRAINT "uq_inventory_number" UNIQUE ("number"),
       CONSTRAINT "fk_inventory_location" FOREIGN KEY ("location_id") REFERENCES "storage_locations"("id") ON DELETE RESTRICT,
       CONSTRAINT "fk_inventory_user" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT)`);
-    await q.query(`CREATE UNIQUE INDEX "uq_inventory_one_draft_per_location" ON "inventory_counts" ("location_id") WHERE "status" = 'DRAFT'`);
+    await q.query(
+      `CREATE UNIQUE INDEX "uq_inventory_one_draft_per_location" ON "inventory_counts" ("location_id") WHERE "status" = 'DRAFT'`,
+    );
 
     await q.query(`CREATE TABLE "inventory_count_lines" (
       "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -96,7 +98,9 @@ export class StarOperations1717300000000 implements MigrationInterface {
       CONSTRAINT "fk_adjustment_line_batch" FOREIGN KEY ("batch_id") REFERENCES "batches"("id") ON DELETE RESTRICT,
       CONSTRAINT "fk_adjustment_line_location" FOREIGN KEY ("location_id") REFERENCES "storage_locations"("id") ON DELETE RESTRICT,
       CONSTRAINT "fk_adjustment_line_reason" FOREIGN KEY ("reason_id") REFERENCES "write_off_reasons"("id") ON DELETE RESTRICT)`);
-    await q.query(`CREATE INDEX "idx_adjustment_line_adj" ON "stock_adjustment_lines" ("adjustment_id")`);
+    await q.query(
+      `CREATE INDEX "idx_adjustment_line_adj" ON "stock_adjustment_lines" ("adjustment_id")`,
+    );
   }
 
   async down(q: QueryRunner): Promise<void> {

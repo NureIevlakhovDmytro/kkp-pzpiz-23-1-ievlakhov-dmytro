@@ -24,7 +24,9 @@ export class StorageLocationsService extends SoftDeleteCrudService<StorageLocati
       .andWhere('s.quantity > 0')
       .getCount();
     if (withStock > 0) {
-      throw new AppException(ErrorCode.CONFLICT, 'Location still holds stock', { positions: withStock });
+      throw new AppException(ErrorCode.CONFLICT, 'Location still holds stock', {
+        positions: withStock,
+      });
     }
   }
 }

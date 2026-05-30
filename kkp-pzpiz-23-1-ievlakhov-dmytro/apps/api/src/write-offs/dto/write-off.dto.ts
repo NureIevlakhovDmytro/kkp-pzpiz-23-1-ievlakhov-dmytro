@@ -21,7 +21,10 @@ export class CreateWriteOffDto {
   @IsDateString() date: string;
   @IsUUID() reasonId: string;
   @IsOptional() @IsString() comment?: string;
-  @IsArray() @ArrayMinSize(1) @ValidateNested({ each: true }) @Type(() => CreateWriteOffLineDto)
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CreateWriteOffLineDto)
   lines: CreateWriteOffLineDto[];
 }
 

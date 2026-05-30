@@ -21,17 +21,27 @@ export class WriteOffsService {
     private readonly dataSource: DataSource,
     private readonly numbers: DocumentNumberService,
     private readonly stock: StockService,
-    @InjectRepository(WriteOffDocumentEntity) private readonly docs: Repository<WriteOffDocumentEntity>,
+    @InjectRepository(WriteOffDocumentEntity)
+    private readonly docs: Repository<WriteOffDocumentEntity>,
   ) {}
 
-  async post(dto: CreateWriteOffDto, userId: string, idempotencyKey?: string): Promise<WriteOffDocumentEntity> {
+  async post(
+    dto: CreateWriteOffDto,
+    userId: string,
+    idempotencyKey?: string,
+  ): Promise<WriteOffDocumentEntity> {
     if (idempotencyKey) {
-      const existing = await this.docs.findOne({ where: { clientUuid: idempotencyKey }, relations: { lines: true } });
+      const existing = await this.docs.findOne({
+        where: { clientUuid: idempotencyKey },
+        relations: { lines: true },
+      });
       if (existing) return existing;
     }
 
     return this.dataSource.transaction(async (manager) => {
-      const reason = await manager.getRepository(WriteOffReasonEntity).findOne({ where: { id: dto.reasonId } });
+      const reason = await manager
+        .getRepository(WriteOffReasonEntity)
+        .findOne({ where: { id: dto.reasonId } });
       if (!reason) throw new AppException(ErrorCode.NOT_FOUND, 'Write-off reason not found');
 
       const number = await this.numbers.next(manager, 'write_off_number_seq', 'WO');
@@ -109,7 +119,10 @@ export class WriteOffsService {
   }
 
   async list(q: PaginationQueryDto, f: WriteOffFilterDto) {
-    const qb = this.docs.createQueryBuilder('w').orderBy('w.date', 'DESC').addOrderBy('w.created_at', 'DESC');
+    const qb = this.docs
+      .createQueryBuilder('w')
+      .orderBy('w.date', 'DESC')
+      .addOrderBy('w.created_at', 'DESC');
     if (f.from) qb.andWhere('w.date >= :from', { from: f.from });
     if (f.to) qb.andWhere('w.date <= :to', { to: f.to });
     if (f.reasonId) qb.andWhere('w.reason_id = :reasonId', { reasonId: f.reasonId });
@@ -123,16 +136,25 @@ export class WriteOffsService {
     return this.loadWithLines(this.docs, id);
   }
 
-  private async loadWithLines(repo: Repository<WriteOffDocumentEntity>, id: string): Promise<WriteOffDocumentEntity> {
+  private async loadWithLines(
+    repo: Repository<WriteOffDocumentEntity>,
+    id: string,
+  ): Promise<WriteOffDocumentEntity> {
     const doc = await repo.findOne({ where: { id }, relations: { lines: true } });
     if (!doc) throw new AppException(ErrorCode.NOT_FOUND, 'Write-off not found');
     return doc;
   }
 
-  private async assertBatchAndActiveLocation(manager: EntityManager, batchId: string, locationId: string): Promise<void> {
+  private async assertBatchAndActiveLocation(
+    manager: EntityManager,
+    batchId: string,
+    locationId: string,
+  ): Promise<void> {
     const batch = await manager.getRepository(BatchEntity).findOne({ where: { id: batchId } });
     if (!batch) throw new AppException(ErrorCode.NOT_FOUND, 'Batch not found');
-    const location = await manager.getRepository(StorageLocationEntity).findOne({ where: { id: locationId } });
+    const location = await manager
+      .getRepository(StorageLocationEntity)
+      .findOne({ where: { id: locationId } });
     if (!location) throw new AppException(ErrorCode.NOT_FOUND, 'Location not found');
     if (!location.isActive) throw new AppException(ErrorCode.BUSINESS_RULE, 'Location is archived');
   }

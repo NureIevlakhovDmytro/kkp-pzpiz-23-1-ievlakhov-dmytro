@@ -10,7 +10,9 @@ import { CreateExchangeRateDto, UpdateExchangeRateDto } from './dto/exchange-rat
 
 @Injectable()
 export class ExchangeRatesService {
-  constructor(@InjectRepository(ExchangeRateEntity) private readonly repo: Repository<ExchangeRateEntity>) {}
+  constructor(
+    @InjectRepository(ExchangeRateEntity) private readonly repo: Repository<ExchangeRateEntity>,
+  ) {}
 
   async list(q: PaginationQueryDto, currencyId?: string) {
     const where = currencyId ? { currencyId } : {};
@@ -24,8 +26,15 @@ export class ExchangeRatesService {
   }
 
   async create(dto: CreateExchangeRateDto): Promise<ExchangeRateEntity> {
-    if (await this.repo.findOne({ where: { currencyId: dto.currencyId, effectiveDate: dto.effectiveDate } })) {
-      throw new AppException(ErrorCode.CONFLICT, 'A rate for this currency and date already exists');
+    if (
+      await this.repo.findOne({
+        where: { currencyId: dto.currencyId, effectiveDate: dto.effectiveDate },
+      })
+    ) {
+      throw new AppException(
+        ErrorCode.CONFLICT,
+        'A rate for this currency and date already exists',
+      );
     }
     return this.repo.save(this.repo.create(dto));
   }

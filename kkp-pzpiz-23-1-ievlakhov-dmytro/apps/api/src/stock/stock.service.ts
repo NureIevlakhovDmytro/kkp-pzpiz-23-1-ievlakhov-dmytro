@@ -19,27 +19,53 @@ export class StockService {
   ) {}
 
   /** Apply a signed delta to a (batch, location) stock row inside a transaction, under a row lock. Enforces quantity >= 0. */
-  async applyDelta(manager: EntityManager, batchId: string, locationId: string, delta: number): Promise<void> {
+  async applyDelta(
+    manager: EntityManager,
+    batchId: string,
+    locationId: string,
+    delta: number,
+  ): Promise<void> {
     const repo = manager.getRepository(StockLevelEntity);
-    let level = await repo.findOne({ where: { batchId, locationId }, lock: { mode: 'pessimistic_write' } });
+    let level = await repo.findOne({
+      where: { batchId, locationId },
+      lock: { mode: 'pessimistic_write' },
+    });
     if (!level) {
       if (delta < 0) {
-        throw new AppException(ErrorCode.CONFLICT, 'Insufficient stock', { batchId, locationId, available: 0, requested: -delta });
+        throw new AppException(ErrorCode.CONFLICT, 'Insufficient stock', {
+          batchId,
+          locationId,
+          available: 0,
+          requested: -delta,
+        });
       }
       level = repo.create({ batchId, locationId, quantity: 0 });
     }
     const next = level.quantity + delta;
     if (next < 0) {
-      throw new AppException(ErrorCode.CONFLICT, 'Insufficient stock', { batchId, locationId, available: level.quantity, requested: -delta });
+      throw new AppException(ErrorCode.CONFLICT, 'Insufficient stock', {
+        batchId,
+        locationId,
+        available: level.quantity,
+        requested: -delta,
+      });
     }
     level.quantity = next;
     await repo.save(level);
   }
 
   /** Set a (batch, location) stock row to an absolute target under a row lock; returns the applied delta (target − current). */
-  async setQuantity(manager: EntityManager, batchId: string, locationId: string, target: number): Promise<number> {
+  async setQuantity(
+    manager: EntityManager,
+    batchId: string,
+    locationId: string,
+    target: number,
+  ): Promise<number> {
     const repo = manager.getRepository(StockLevelEntity);
-    let level = await repo.findOne({ where: { batchId, locationId }, lock: { mode: 'pessimistic_write' } });
+    let level = await repo.findOne({
+      where: { batchId, locationId },
+      lock: { mode: 'pessimistic_write' },
+    });
     const current = level ? level.quantity : 0;
     level ??= repo.create({ batchId, locationId, quantity: 0 });
     level.quantity = target;
@@ -56,7 +82,11 @@ export class StockService {
     return Number(row.total);
   }
 
-  async listStock(productId?: string, locationId?: string, expired?: boolean): Promise<StockLevelDto[]> {
+  async listStock(
+    productId?: string,
+    locationId?: string,
+    expired?: boolean,
+  ): Promise<StockLevelDto[]> {
     const qb = this.stock
       .createQueryBuilder('s')
       .innerJoin(BatchEntity, 'b', 'b.id = s.batch_id')
@@ -74,7 +104,11 @@ export class StockService {
     if (expired === true) qb.andWhere('b.expiry_date IS NOT NULL AND b.expiry_date < CURRENT_DATE');
     if (expired === false) qb.andWhere('(b.expiry_date IS NULL OR b.expiry_date >= CURRENT_DATE)');
     const rows = await qb.getRawMany<StockLevelDto & { quantity: string }>();
-    return rows.map((r) => ({ ...r, quantity: Number(r.quantity), isExpired: Boolean(r.isExpired) }));
+    return rows.map((r) => ({
+      ...r,
+      quantity: Number(r.quantity),
+      isExpired: Boolean(r.isExpired),
+    }));
   }
 
   async lowStock(): Promise<LowStockDto[]> {
@@ -93,7 +127,12 @@ export class StockService {
       .addGroupBy('p.name')
       .addGroupBy('p.min_stock')
       .having('COALESCE(SUM(s.quantity), 0) < p.min_stock')
-      .getRawMany<{ productId: string; productName: string; totalQuantity: string; minStock: string }>();
+      .getRawMany<{
+        productId: string;
+        productName: string;
+        totalQuantity: string;
+        minStock: string;
+      }>();
     return rows.map((r) => ({
       productId: r.productId,
       productName: r.productName,
@@ -102,7 +141,11 @@ export class StockService {
     }));
   }
 
-  async fefoSuggestion(productId: string, locationId: string, quantity: number): Promise<FefoSuggestionDto> {
+  async fefoSuggestion(
+    productId: string,
+    locationId: string,
+    quantity: number,
+  ): Promise<FefoSuggestionDto> {
     const rows = await this.stock
       .createQueryBuilder('s')
       .innerJoin(BatchEntity, 'b', 'b.id = s.batch_id')
@@ -115,7 +158,12 @@ export class StockService {
       .where('b.product_id = :productId', { productId })
       .andWhere('s.location_id = :locationId', { locationId })
       .andWhere('s.quantity > 0')
-      .getRawMany<{ batchId: string; available: string; expiryDate: string | null; receivedDate: string }>();
+      .getRawMany<{
+        batchId: string;
+        available: string;
+        expiryDate: string | null;
+        receivedDate: string;
+      }>();
 
     const candidates: FefoBatch[] = rows.map((r) => ({
       batchId: r.batchId,

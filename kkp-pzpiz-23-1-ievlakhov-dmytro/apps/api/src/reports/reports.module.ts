@@ -11,7 +11,12 @@ import { ReportsService } from './reports.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([WriteOffReasonEntity, InventoryCountEntity, StockAdjustmentEntity, BatchEntity]),
+    TypeOrmModule.forFeature([
+      WriteOffReasonEntity,
+      InventoryCountEntity,
+      StockAdjustmentEntity,
+      BatchEntity,
+    ]),
     CurrencyModule,
   ],
   controllers: [ReportsController],

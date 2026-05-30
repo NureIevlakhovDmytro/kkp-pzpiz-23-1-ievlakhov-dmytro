@@ -27,7 +27,12 @@ export class CurrencyConverterService {
   }
 
   /** Convert `amount` in `currencyId` to base currency using the rate effective on `date`. Base currency = identity. */
-  async convert(amount: number, currencyId: string, date: string, baseCurrencyId: string): Promise<ConversionResult> {
+  async convert(
+    amount: number,
+    currencyId: string,
+    date: string,
+    baseCurrencyId: string,
+  ): Promise<ConversionResult> {
     if (currencyId === baseCurrencyId) return { base: amount, rateMissing: false };
     const rows = await this.rates.find({ where: { currencyId } });
     const rate = pickRate(rows, date);

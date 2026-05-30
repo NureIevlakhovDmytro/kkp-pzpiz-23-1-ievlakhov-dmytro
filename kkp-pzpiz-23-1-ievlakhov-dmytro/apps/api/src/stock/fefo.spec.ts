@@ -1,6 +1,11 @@
 import { allocateFefo, type FefoBatch } from './fefo';
 
-const b = (batchId: string, available: number, expiryDate: string | null, receivedDate = '2026-01-01'): FefoBatch => ({
+const b = (
+  batchId: string,
+  available: number,
+  expiryDate: string | null,
+  receivedDate = '2026-01-01',
+): FefoBatch => ({
   batchId,
   available,
   expiryDate,

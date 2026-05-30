@@ -26,7 +26,10 @@ export class CreateReceiptDto {
   @IsOptional() @IsUUID() supplierId?: string;
   @IsUUID() locationId: string;
   @IsDateString() date: string;
-  @IsArray() @ArrayMinSize(1) @ValidateNested({ each: true }) @Type(() => CreateReceiptLineDto)
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CreateReceiptLineDto)
   lines: CreateReceiptLineDto[];
 }
 

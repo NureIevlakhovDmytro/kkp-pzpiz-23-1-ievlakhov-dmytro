@@ -30,7 +30,10 @@ export class SettingsService {
       if (!c) throw new AppException(ErrorCode.NOT_FOUND, 'Base currency not found');
       const batchCount = await this.batches.count();
       if (batchCount > 0) {
-        throw new AppException(ErrorCode.CONFLICT, 'Base currency is frozen after the first valued operation');
+        throw new AppException(
+          ErrorCode.CONFLICT,
+          'Base currency is frozen after the first valued operation',
+        );
       }
       s.baseCurrencyId = dto.baseCurrencyId;
     }

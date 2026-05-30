@@ -5,7 +5,7 @@ import type { EntityManager } from 'typeorm';
 import { DataSource, Repository } from 'typeorm';
 
 import { AppException } from '../common/api-exception';
-import { paginate,PaginationQueryDto } from '../common/dto/pagination.dto';
+import { paginate, PaginationQueryDto } from '../common/dto/pagination.dto';
 import { DocumentNumberService } from '../common/numbering/document-number.service';
 import { BatchEntity } from '../entities/batch.entity';
 import { CurrencyEntity } from '../entities/currency.entity';
@@ -23,10 +23,15 @@ export class ReceiptsService {
     private readonly dataSource: DataSource,
     private readonly numbers: DocumentNumberService,
     private readonly stock: StockService,
-    @InjectRepository(ReceiptDocumentEntity) private readonly receipts: Repository<ReceiptDocumentEntity>,
+    @InjectRepository(ReceiptDocumentEntity)
+    private readonly receipts: Repository<ReceiptDocumentEntity>,
   ) {}
 
-  async post(dto: CreateReceiptDto, userId: string, idempotencyKey?: string): Promise<ReceiptDocumentEntity> {
+  async post(
+    dto: CreateReceiptDto,
+    userId: string,
+    idempotencyKey?: string,
+  ): Promise<ReceiptDocumentEntity> {
     if (idempotencyKey) {
       const existing = await this.receipts.findOne({
         where: { clientUuid: idempotencyKey },
@@ -139,7 +144,10 @@ export class ReceiptsService {
   }
 
   async list(q: PaginationQueryDto, f: ReceiptFilterDto) {
-    const qb = this.receipts.createQueryBuilder('r').orderBy('r.date', 'DESC').addOrderBy('r.created_at', 'DESC');
+    const qb = this.receipts
+      .createQueryBuilder('r')
+      .orderBy('r.date', 'DESC')
+      .addOrderBy('r.created_at', 'DESC');
     if (f.from) qb.andWhere('r.date >= :from', { from: f.from });
     if (f.to) qb.andWhere('r.date <= :to', { to: f.to });
     if (f.supplierId) qb.andWhere('r.supplier_id = :supplierId', { supplierId: f.supplierId });
@@ -154,32 +162,43 @@ export class ReceiptsService {
     return this.loadWithLines(this.receipts, id);
   }
 
-  private async loadWithLines(repo: Repository<ReceiptDocumentEntity>, id: string): Promise<ReceiptDocumentEntity> {
+  private async loadWithLines(
+    repo: Repository<ReceiptDocumentEntity>,
+    id: string,
+  ): Promise<ReceiptDocumentEntity> {
     const doc = await repo.findOne({ where: { id }, relations: { lines: true } });
     if (!doc) throw new AppException(ErrorCode.NOT_FOUND, 'Receipt not found');
     return doc;
   }
 
   private async validateLocation(manager: EntityManager, locationId: string): Promise<void> {
-    const location = await manager.getRepository(StorageLocationEntity).findOne({ where: { id: locationId } });
+    const location = await manager
+      .getRepository(StorageLocationEntity)
+      .findOne({ where: { id: locationId } });
     if (!location) throw new AppException(ErrorCode.NOT_FOUND, 'Location not found');
     if (!location.isActive) throw new AppException(ErrorCode.BUSINESS_RULE, 'Location is archived');
   }
 
   private async validateSupplier(manager: EntityManager, supplierId: string): Promise<void> {
-    const supplier = await manager.getRepository(SupplierEntity).findOne({ where: { id: supplierId } });
+    const supplier = await manager
+      .getRepository(SupplierEntity)
+      .findOne({ where: { id: supplierId } });
     if (!supplier) throw new AppException(ErrorCode.NOT_FOUND, 'Supplier not found');
     if (!supplier.isActive) throw new AppException(ErrorCode.BUSINESS_RULE, 'Supplier is archived');
   }
 
   private async validateProduct(manager: EntityManager, productId: string): Promise<void> {
-    const product = await manager.getRepository(ProductEntity).findOne({ where: { id: productId } });
+    const product = await manager
+      .getRepository(ProductEntity)
+      .findOne({ where: { id: productId } });
     if (!product) throw new AppException(ErrorCode.NOT_FOUND, 'Product not found');
     if (!product.isActive) throw new AppException(ErrorCode.BUSINESS_RULE, 'Product is archived');
   }
 
   private async validateCurrency(manager: EntityManager, currencyId: string): Promise<void> {
-    const currency = await manager.getRepository(CurrencyEntity).findOne({ where: { id: currencyId } });
+    const currency = await manager
+      .getRepository(CurrencyEntity)
+      .findOne({ where: { id: currencyId } });
     if (!currency) throw new AppException(ErrorCode.NOT_FOUND, 'Currency not found');
   }
 }
