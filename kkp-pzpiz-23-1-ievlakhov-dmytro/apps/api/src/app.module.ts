@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { PersistenceModule } from './persistence/persistence.module';
 import { AuthModule } from './auth/auth.module';
 import { ReferenceModule } from './reference/reference.module';
+import { ProductsModule } from './products/products.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
@@ -17,6 +18,7 @@ import { RolesGuard } from './auth/roles.guard';
     PersistenceModule,
     AuthModule,
     ReferenceModule,
+    ProductsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
