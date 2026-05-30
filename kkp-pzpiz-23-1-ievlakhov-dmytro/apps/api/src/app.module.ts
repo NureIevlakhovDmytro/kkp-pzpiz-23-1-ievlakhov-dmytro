@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { AuditModule } from './core/audit/audit.module';
@@ -11,6 +12,7 @@ import { CommonModule } from './core/common/common.module';
 import { PersistenceModule } from './core/database/persistence.module';
 import { CurrencyModule } from './modules/currency/currency.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ReceiptsModule } from './modules/receipts/receipts.module';
 import { ReferenceModule } from './modules/reference/reference.module';
@@ -25,6 +27,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 100 }]),
+    ScheduleModule.forRoot(),
     CommonModule,
     PersistenceModule,
     AuthModule,
@@ -40,6 +43,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
     InventoryModule,
     ReportsModule,
     TransfersModule,
+    NotificationsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

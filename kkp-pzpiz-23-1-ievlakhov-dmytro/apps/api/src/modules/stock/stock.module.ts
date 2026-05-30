@@ -13,6 +13,6 @@ import { StockService } from './stock.service';
   imports: [TypeOrmModule.forFeature([StockLevelEntity, BatchEntity, ProductEntity])],
   controllers: [StockController, BatchesController],
   providers: [StockService, BatchesService],
-  exports: [StockService],
+  exports: [StockService, BatchesService],
 })
 export class StockModule {}
