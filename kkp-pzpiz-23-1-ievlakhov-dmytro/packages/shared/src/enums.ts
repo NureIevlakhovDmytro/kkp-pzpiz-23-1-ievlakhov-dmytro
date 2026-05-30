@@ -33,3 +33,9 @@ export enum DocumentStatus {
   POSTED = 'POSTED',
   REVERSED = 'REVERSED',
 }
+
+/** Inventory count lifecycle. */
+export enum InventoryStatus {
+  DRAFT = 'DRAFT',
+  COMPLETED = 'COMPLETED',
+}
