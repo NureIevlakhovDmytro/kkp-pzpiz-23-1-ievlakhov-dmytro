@@ -10,6 +10,11 @@ export function deriveAuditAction(method: string, path: string): AuditAction | n
   if (method === 'POST' && path.endsWith('/auth/logout')) return AuditAction.LOGOUT;
   if (method === 'POST' && path.endsWith('/complete')) return AuditAction.INVENTORY_COMPLETED;
   if (method === 'POST' && path.endsWith('/reverse')) return AuditAction.DOCUMENT_REVERSED;
+  if (method === 'POST' && path.endsWith('/admin/users')) return AuditAction.USER_CREATED;
+  if (method === 'PATCH' && /\/admin\/users\/[^/]+$/.test(path))
+    return AuditAction.USER_ROLE_CHANGED;
+  if (method === 'DELETE' && /\/admin\/users\/[^/]+$/.test(path))
+    return AuditAction.USER_ANONYMIZED;
   if (method === 'POST' && OPERATION.test(path)) return AuditAction.DOCUMENT_POSTED;
   if (
     (method === 'POST' || method === 'PATCH' || method === 'DELETE') &&

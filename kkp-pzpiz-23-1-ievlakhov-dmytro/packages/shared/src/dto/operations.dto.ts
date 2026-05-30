@@ -2,7 +2,9 @@ import type {
   AuditAction,
   DocumentStatus,
   InventoryStatus,
+  Locale,
   NotificationType,
+  Role,
   WriteOffReasonCode,
 } from '../enums';
 
@@ -148,4 +150,14 @@ export interface AuditLogDto {
   entityId: string | null;
   details: Record<string, unknown> | null;
   createdAt: string;
+}
+
+export interface UserDto {
+  id: string;
+  email: string;
+  fullName: string;
+  role: Role;
+  locale: Locale;
+  isActive: boolean;
+  anonymizedAt: string | null;
 }

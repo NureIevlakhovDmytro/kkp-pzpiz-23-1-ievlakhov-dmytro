@@ -21,6 +21,7 @@ import { SeedModule } from './modules/seed/seed.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { StockModule } from './modules/stock/stock.module';
 import { TransfersModule } from './modules/transfers/transfers.module';
+import { UserManagementModule } from './modules/user-management/user-management.module';
 import { WriteOffsModule } from './modules/write-offs/write-offs.module';
 
 @Module({
@@ -44,6 +45,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
     ReportsModule,
     TransfersModule,
     NotificationsModule,
+    UserManagementModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

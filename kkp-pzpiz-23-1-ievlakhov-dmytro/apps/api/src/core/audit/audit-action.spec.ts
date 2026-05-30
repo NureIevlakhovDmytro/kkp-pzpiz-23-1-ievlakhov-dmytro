@@ -36,4 +36,10 @@ describe('deriveAuditAction', () => {
     expect(deriveAuditAction('PATCH', '/api/notifications/abc/read')).toBeNull();
     expect(deriveAuditAction('GET', '/api/reports/loss-structure')).toBeNull();
   });
+
+  it('maps admin user management', () => {
+    expect(deriveAuditAction('POST', '/api/admin/users')).toBe(AuditAction.USER_CREATED);
+    expect(deriveAuditAction('PATCH', '/api/admin/users/abc')).toBe(AuditAction.USER_ROLE_CHANGED);
+    expect(deriveAuditAction('DELETE', '/api/admin/users/abc')).toBe(AuditAction.USER_ANONYMIZED);
+  });
 });
