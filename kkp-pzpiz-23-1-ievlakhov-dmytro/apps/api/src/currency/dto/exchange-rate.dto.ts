@@ -10,3 +10,7 @@ export class UpdateExchangeRateDto {
   @IsOptional() @IsNumber() @IsPositive() rateToBase?: number;
   @IsOptional() @IsDateString() effectiveDate?: string;
 }
+
+export class RateFilterDto {
+  @IsOptional() @IsUUID() currencyId?: string;
+}

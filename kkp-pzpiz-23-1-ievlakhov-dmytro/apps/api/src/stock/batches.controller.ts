@@ -1,22 +1,9 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsBoolean, IsOptional, IsUUID } from 'class-validator';
 
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
 import { BatchesService } from './batches.service';
-import { ExpiringQueryDto } from './dto/stock-query.dto';
-
-class BatchFilterDto {
-  @IsOptional() @IsUUID() productId?: string;
-  @IsOptional() @IsUUID() supplierId?: string;
-  @IsOptional() expiryFrom?: string;
-  @IsOptional() expiryTo?: string;
-  @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === '1' || value === true)
-  @IsBoolean()
-  expired?: boolean;
-}
+import { BatchFilterDto, ExpiringQueryDto } from './dto/stock-query.dto';
 
 @ApiTags('batches')
 @ApiBearerAuth()

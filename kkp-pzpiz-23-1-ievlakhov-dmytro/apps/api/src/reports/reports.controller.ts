@@ -1,13 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsDateString } from 'class-validator';
 
+import { LossStructureQueryDto } from './dto/loss-structure.dto';
 import { ReportsService } from './reports.service';
-
-class LossStructureQueryDto {
-  @IsDateString() from: string;
-  @IsDateString() to: string;
-}
 
 @ApiTags('reports')
 @ApiBearerAuth()

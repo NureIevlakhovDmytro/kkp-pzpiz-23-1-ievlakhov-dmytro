@@ -1,16 +1,15 @@
 import { Role } from '@app/shared';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsOptional, IsUUID } from 'class-validator';
 
 import { Roles } from '../auth/decorators';
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
-import { CreateExchangeRateDto, UpdateExchangeRateDto } from './dto/exchange-rate.dto';
+import {
+  CreateExchangeRateDto,
+  RateFilterDto,
+  UpdateExchangeRateDto,
+} from './dto/exchange-rate.dto';
 import { ExchangeRatesService } from './exchange-rates.service';
-
-class RateFilterDto {
-  @IsOptional() @IsUUID() currencyId?: string;
-}
 
 @ApiTags('exchange-rates')
 @ApiBearerAuth()

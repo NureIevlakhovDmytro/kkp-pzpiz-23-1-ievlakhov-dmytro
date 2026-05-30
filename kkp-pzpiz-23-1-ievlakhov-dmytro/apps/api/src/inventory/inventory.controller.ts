@@ -1,16 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { CurrentUser, JwtUser } from '../auth/decorators';
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
-import { CreateInventoryDto, PatchInventoryDto } from './dto/inventory.dto';
+import { CreateInventoryDto, InventoryFilterDto, PatchInventoryDto } from './dto/inventory.dto';
 import { InventoryService } from './inventory.service';
-
-class InventoryFilterDto {
-  @IsOptional() @IsUUID() locationId?: string;
-  @IsOptional() @IsString() status?: string;
-}
 
 @ApiTags('inventory')
 @ApiBearerAuth()

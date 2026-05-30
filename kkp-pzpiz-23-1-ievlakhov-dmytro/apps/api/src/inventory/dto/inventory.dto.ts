@@ -4,6 +4,8 @@ import {
   IsArray,
   IsDateString,
   IsNumber,
+  IsOptional,
+  IsString,
   IsUUID,
   Min,
   ValidateNested,
@@ -20,6 +22,14 @@ export class CountLineDto {
 }
 
 export class PatchInventoryDto {
-  @IsArray() @ArrayMinSize(1) @ValidateNested({ each: true }) @Type(() => CountLineDto)
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CountLineDto)
   counts: CountLineDto[];
+}
+
+export class InventoryFilterDto {
+  @IsOptional() @IsUUID() locationId?: string;
+  @IsOptional() @IsString() status?: string;
 }

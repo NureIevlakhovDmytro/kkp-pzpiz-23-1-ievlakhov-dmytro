@@ -1,7 +1,8 @@
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsOptional, IsPositive, IsUUID, Min } from 'class-validator';
 
-const toBool = ({ value }: { value: unknown }) => value === 'true' || value === '1' || value === true;
+const toBool = ({ value }: { value: unknown }) =>
+  value === 'true' || value === '1' || value === true;
 
 export class StockQueryDto {
   @IsOptional() @IsUUID() productId?: string;
@@ -17,4 +18,15 @@ export class FefoSuggestionQueryDto {
 
 export class ExpiringQueryDto {
   @Type(() => Number) @IsInt() @Min(0) days: number;
+}
+
+export class BatchFilterDto {
+  @IsOptional() @IsUUID() productId?: string;
+  @IsOptional() @IsUUID() supplierId?: string;
+  @IsOptional() expiryFrom?: string;
+  @IsOptional() expiryTo?: string;
+  @IsOptional()
+  @Transform(({ value }) => value === 'true' || value === '1' || value === true)
+  @IsBoolean()
+  expired?: boolean;
 }
