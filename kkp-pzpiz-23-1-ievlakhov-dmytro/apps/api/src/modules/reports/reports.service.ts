@@ -4,6 +4,7 @@ import {
   InventoryReportDto,
   LossStructureReportDto,
   LossStructureRowDto,
+  StockMovementRowDto,
 } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -159,6 +160,120 @@ export class ReportsService {
       surplusTotalBase: round2(surplusTotalBase),
       rateMissing,
     };
+  }
+
+  async stockMovement(
+    from: string,
+    to: string,
+    productId?: string,
+    locationId?: string,
+  ): Promise<StockMovementRowDto[]> {
+    const m = this.batches.manager;
+
+    interface RawMovementRow {
+      date: string;
+      documentType: StockMovementRowDto['documentType'];
+      documentNumber: string;
+      productId: string;
+      batchId: string;
+      locationId: string;
+      quantityChange: string;
+    }
+
+    const receipts = await m
+      .createQueryBuilder()
+      .select([
+        'd.date AS "date"',
+        `'RECEIPT' AS "documentType"`,
+        'd.number AS "documentNumber"',
+        'b.product_id AS "productId"',
+        'l.batch_id AS "batchId"',
+        'd.location_id AS "locationId"',
+        'l.quantity AS "quantityChange"',
+      ])
+      .from('receipt_lines', 'l')
+      .innerJoin('receipt_documents', 'd', 'd.id = l.receipt_id')
+      .innerJoin('batches', 'b', 'b.id = l.batch_id')
+      .where('d.date BETWEEN :from AND :to', { from, to })
+      .getRawMany<RawMovementRow>();
+
+    const writeOffs = await m
+      .createQueryBuilder()
+      .select([
+        'd.date AS "date"',
+        `'WRITE_OFF' AS "documentType"`,
+        'd.number AS "documentNumber"',
+        'b.product_id AS "productId"',
+        'l.batch_id AS "batchId"',
+        'l.location_id AS "locationId"',
+        '(-l.quantity) AS "quantityChange"',
+      ])
+      .from('write_off_lines', 'l')
+      .innerJoin('write_off_documents', 'd', 'd.id = l.write_off_id')
+      .innerJoin('batches', 'b', 'b.id = l.batch_id')
+      .where('d.date BETWEEN :from AND :to', { from, to })
+      .getRawMany<RawMovementRow>();
+
+    const adjustments = await m
+      .createQueryBuilder()
+      .select([
+        'a.date AS "date"',
+        `'ADJUSTMENT' AS "documentType"`,
+        'a.number AS "documentNumber"',
+        'b.product_id AS "productId"',
+        'al.batch_id AS "batchId"',
+        'al.location_id AS "locationId"',
+        'al.delta AS "quantityChange"',
+      ])
+      .from('stock_adjustment_lines', 'al')
+      .innerJoin('stock_adjustments', 'a', 'a.id = al.adjustment_id')
+      .innerJoin('batches', 'b', 'b.id = al.batch_id')
+      .where('a.date BETWEEN :from AND :to', { from, to })
+      .getRawMany<RawMovementRow>();
+
+    const transfersOut = await m
+      .createQueryBuilder()
+      .select([
+        'd.date AS "date"',
+        `'TRANSFER_OUT' AS "documentType"`,
+        'd.number AS "documentNumber"',
+        'b.product_id AS "productId"',
+        'l.batch_id AS "batchId"',
+        'd.from_location_id AS "locationId"',
+        '(-l.quantity) AS "quantityChange"',
+      ])
+      .from('transfer_lines', 'l')
+      .innerJoin('transfer_documents', 'd', 'd.id = l.transfer_id')
+      .innerJoin('batches', 'b', 'b.id = l.batch_id')
+      .where('d.date BETWEEN :from AND :to', { from, to })
+      .getRawMany<RawMovementRow>();
+
+    const transfersIn = await m
+      .createQueryBuilder()
+      .select([
+        'd.date AS "date"',
+        `'TRANSFER_IN' AS "documentType"`,
+        'd.number AS "documentNumber"',
+        'b.product_id AS "productId"',
+        'l.batch_id AS "batchId"',
+        'd.to_location_id AS "locationId"',
+        'l.quantity AS "quantityChange"',
+      ])
+      .from('transfer_lines', 'l')
+      .innerJoin('transfer_documents', 'd', 'd.id = l.transfer_id')
+      .innerJoin('batches', 'b', 'b.id = l.batch_id')
+      .where('d.date BETWEEN :from AND :to', { from, to })
+      .getRawMany<RawMovementRow>();
+
+    const raw = [...receipts, ...writeOffs, ...adjustments, ...transfersOut, ...transfersIn];
+
+    return raw
+      .filter((r) => (productId ? r.productId === productId : true))
+      .filter((r) => (locationId ? r.locationId === locationId : true))
+      .map((r) => ({ ...r, quantityChange: Number(r.quantityChange) }))
+      .sort((a, b) =>
+        a.date < b.date ? -1 : a.date > b.date ? 1 : a.documentNumber < b.documentNumber ? -1 : 1,
+      );
   }
 }
 

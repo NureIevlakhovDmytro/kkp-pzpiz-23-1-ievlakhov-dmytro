@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { LossStructureQueryDto } from './dto/loss-structure.dto';
+import { StockMovementQueryDto } from './dto/stock-movement.dto';
 import { ReportsService } from './reports.service';
 
 @ApiTags('reports')
@@ -18,5 +19,10 @@ export class ReportsController {
   @Get('inventory/:id')
   inventory(@Param('id') id: string) {
     return this.reports.inventoryReport(id);
+  }
+
+  @Get('stock-movement')
+  stockMovement(@Query() q: StockMovementQueryDto) {
+    return this.reports.stockMovement(q.from, q.to, q.productId, q.locationId);
   }
 }
