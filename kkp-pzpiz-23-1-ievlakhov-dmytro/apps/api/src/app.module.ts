@@ -12,6 +12,7 @@ import { CommonModule } from './core/common/common.module';
 import { PersistenceModule } from './core/database/persistence.module';
 import { BackupModule } from './modules/backup/backup.module';
 import { CurrencyModule } from './modules/currency/currency.module';
+import { DataExchangeModule } from './modules/data-exchange/data-exchange.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ProductsModule } from './modules/products/products.module';
@@ -48,6 +49,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
     NotificationsModule,
     UserManagementModule,
     BackupModule,
+    DataExchangeModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

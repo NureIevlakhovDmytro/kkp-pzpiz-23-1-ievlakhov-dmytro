@@ -51,4 +51,9 @@ describe('deriveAuditAction', () => {
   it('maps backup', () => {
     expect(deriveAuditAction('POST', '/api/admin/backup')).toBe(AuditAction.BACKUP_CREATED);
   });
+
+  it('maps data export/import', () => {
+    expect(deriveAuditAction('GET', '/api/admin/export')).toBe(AuditAction.DATA_EXPORTED);
+    expect(deriveAuditAction('POST', '/api/admin/import')).toBe(AuditAction.DATA_IMPORTED);
+  });
 });

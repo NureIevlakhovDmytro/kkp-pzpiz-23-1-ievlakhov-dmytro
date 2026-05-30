@@ -161,3 +161,17 @@ export interface UserDto {
   isActive: boolean;
   anonymizedAt: string | null;
 }
+
+export type ExportEntity =
+  | 'categories'
+  | 'units'
+  | 'suppliers'
+  | 'storage-locations'
+  | 'currencies';
+
+export interface ImportResultDto {
+  entity: ExportEntity;
+  created: number;
+  updated: number;
+  errors: { row: number; message: string }[];
+}
