@@ -1,6 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 const request = require('supertest');
-import { loadConfig } from '../src/config/env';
+import { loadConfig } from '../src/core/config/env';
 import { bootstrapTestApp } from './helpers';
 
 describe('Reference dictionaries (e2e)', () => {

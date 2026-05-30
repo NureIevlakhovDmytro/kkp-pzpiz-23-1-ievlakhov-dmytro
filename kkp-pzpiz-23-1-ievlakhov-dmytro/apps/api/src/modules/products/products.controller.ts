@@ -1,0 +1,44 @@
+import { Role } from '@app/shared';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { Roles } from '../../core/auth/decorators';
+import { PaginationQueryDto } from '../../core/common/dto/pagination.dto';
+import { CreateProductDto, ProductFilterDto, UpdateProductDto } from './dto/product.dto';
+import { ProductsService } from './products.service';
+
+@ApiTags('products')
+@ApiBearerAuth()
+@Controller('products')
+export class ProductsController {
+  constructor(private readonly svc: ProductsService) {}
+
+  @Get()
+  list(@Query() page: PaginationQueryDto, @Query() f: ProductFilterDto) {
+    return this.svc.list(page, f.includeInactive);
+  }
+
+  @Get(':id')
+  get(@Param('id') id: string) {
+    return this.svc.getById(id);
+  }
+
+  @Roles(Role.ADMIN)
+  @Post()
+  create(@Body() body: CreateProductDto) {
+    return this.svc.createProduct(body);
+  }
+
+  @Roles(Role.ADMIN)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: UpdateProductDto) {
+    return this.svc.updateProduct(id, body);
+  }
+
+  @Roles(Role.ADMIN)
+  @Delete(':id')
+  async archive(@Param('id') id: string) {
+    await this.svc.archive(id);
+    return { status: 'archived' };
+  }
+}

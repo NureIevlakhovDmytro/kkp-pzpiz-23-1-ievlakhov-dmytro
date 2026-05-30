@@ -3,21 +3,21 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
-import { AuthModule } from './auth/auth.module';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { RolesGuard } from './auth/roles.guard';
-import { CommonModule } from './common/common.module';
-import { CurrencyModule } from './currency/currency.module';
-import { InventoryModule } from './inventory/inventory.module';
-import { PersistenceModule } from './persistence/persistence.module';
-import { ProductsModule } from './products/products.module';
-import { ReceiptsModule } from './receipts/receipts.module';
-import { ReferenceModule } from './reference/reference.module';
-import { ReportsModule } from './reports/reports.module';
-import { SeedModule } from './seed/seed.module';
-import { SettingsModule } from './settings/settings.module';
-import { StockModule } from './stock/stock.module';
-import { WriteOffsModule } from './write-offs/write-offs.module';
+import { AuthModule } from './core/auth/auth.module';
+import { JwtAuthGuard } from './core/auth/jwt-auth.guard';
+import { RolesGuard } from './core/auth/roles.guard';
+import { CommonModule } from './core/common/common.module';
+import { PersistenceModule } from './core/database/persistence.module';
+import { CurrencyModule } from './modules/currency/currency.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { ProductsModule } from './modules/products/products.module';
+import { ReceiptsModule } from './modules/receipts/receipts.module';
+import { ReferenceModule } from './modules/reference/reference.module';
+import { ReportsModule } from './modules/reports/reports.module';
+import { SeedModule } from './modules/seed/seed.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { StockModule } from './modules/stock/stock.module';
+import { WriteOffsModule } from './modules/write-offs/write-offs.module';
 
 @Module({
   imports: [
