@@ -4,8 +4,12 @@ import { ColumnNumericTransformer } from '../common/transformers/numeric.transfo
 
 @Entity('exchange_rates')
 export class ExchangeRateEntity {
-  @PrimaryGeneratedColumn('uuid') id: string;
-  @Column({ name: 'currency_id' }) currencyId: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'currency_id' })
+  currencyId: string;
+
   @Column({
     name: 'rate_to_base',
     type: 'numeric',
@@ -14,5 +18,7 @@ export class ExchangeRateEntity {
     transformer: new ColumnNumericTransformer(),
   })
   rateToBase: number;
-  @Column({ name: 'effective_date', type: 'date' }) effectiveDate: string;
+
+  @Column({ name: 'effective_date', type: 'date' })
+  effectiveDate: string;
 }
