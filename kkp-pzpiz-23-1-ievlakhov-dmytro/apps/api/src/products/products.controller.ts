@@ -1,17 +1,11 @@
 import { Role } from '@app/shared';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsOptional, IsUUID } from 'class-validator';
 
 import { Roles } from '../auth/decorators';
-import { IncludeInactiveQuery } from '../common/crud/dto/reference.dto';
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
-import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
+import { CreateProductDto, ProductFilterDto, UpdateProductDto } from './dto/product.dto';
 import { ProductsService } from './products.service';
-
-class ProductFilter extends IncludeInactiveQuery {
-  @IsOptional() @IsUUID() categoryId?: string;
-}
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -20,7 +14,7 @@ export class ProductsController {
   constructor(private readonly svc: ProductsService) {}
 
   @Get()
-  list(@Query() page: PaginationQueryDto, @Query() f: ProductFilter) {
+  list(@Query() page: PaginationQueryDto, @Query() f: ProductFilterDto) {
     return this.svc.list(page, f.includeInactive);
   }
 

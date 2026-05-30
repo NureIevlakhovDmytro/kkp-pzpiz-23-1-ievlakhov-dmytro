@@ -1,21 +1,12 @@
 import { Role } from '@app/shared';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
 
 import { Roles } from '../auth/decorators';
 import { IncludeInactiveQuery } from '../common/crud/dto/reference.dto';
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
+import { CreateSupplierDto, UpdateSupplierDto } from './dto/supplier.dto';
 import { SuppliersService } from './suppliers.service';
-
-class CreateSupplierDto {
-  @IsString() @MinLength(1) name: string;
-  @IsOptional() @IsString() contactInfo?: string;
-}
-class UpdateSupplierDto {
-  @IsOptional() @IsString() @MinLength(1) name?: string;
-  @IsOptional() @IsString() contactInfo?: string;
-}
 
 @ApiTags('suppliers')
 @ApiBearerAuth()

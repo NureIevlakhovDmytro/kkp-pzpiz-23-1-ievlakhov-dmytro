@@ -1,21 +1,12 @@
 import { Role } from '@app/shared';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
 
 import { Roles } from '../auth/decorators';
 import { IncludeInactiveQuery } from '../common/crud/dto/reference.dto';
 import { PaginationQueryDto } from '../common/dto/pagination.dto';
+import { CreateUnitDto, UpdateUnitDto } from './dto/unit.dto';
 import { UnitsService } from './units.service';
-
-class CreateUnitDto {
-  @IsString() @MinLength(1) code: string;
-  @IsString() @MinLength(1) name: string;
-}
-class UpdateUnitDto {
-  @IsOptional() @IsString() @MinLength(1) code?: string;
-  @IsOptional() @IsString() @MinLength(1) name?: string;
-}
 
 @ApiTags('units')
 @ApiBearerAuth()
