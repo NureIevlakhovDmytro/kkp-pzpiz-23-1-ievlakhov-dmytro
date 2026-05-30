@@ -27,3 +27,9 @@ export enum WriteOffReasonCode {
   BREAKAGE = 'BREAKAGE',
   SHORTAGE = 'SHORTAGE',
 }
+
+/** Lifecycle of posted operation documents (receipts, transfers, write-offs). */
+export enum DocumentStatus {
+  POSTED = 'POSTED',
+  REVERSED = 'REVERSED',
+}
