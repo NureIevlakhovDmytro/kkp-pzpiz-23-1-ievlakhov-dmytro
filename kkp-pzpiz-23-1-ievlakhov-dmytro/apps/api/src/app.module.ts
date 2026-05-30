@@ -5,6 +5,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { CommonModule } from './common/common.module';
 import { PersistenceModule } from './persistence/persistence.module';
 import { AuthModule } from './auth/auth.module';
+import { ReferenceModule } from './reference/reference.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
@@ -15,6 +16,7 @@ import { RolesGuard } from './auth/roles.guard';
     CommonModule,
     PersistenceModule,
     AuthModule,
+    ReferenceModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
