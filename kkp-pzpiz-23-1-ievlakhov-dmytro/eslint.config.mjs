@@ -1,4 +1,4 @@
-import eslintConfigPrettier from 'eslint-config-prettier';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
@@ -27,6 +27,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
+  eslintPluginPrettierRecommended,
   {
     files: ['**/*.spec.ts', '**/*.e2e-spec.ts', 'apps/api/test/**/*.ts'],
     rules: {
@@ -40,5 +41,4 @@ export default tseslint.config(
       '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
-  eslintConfigPrettier,
 );
