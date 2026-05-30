@@ -17,6 +17,7 @@ import { ReportsModule } from './modules/reports/reports.module';
 import { SeedModule } from './modules/seed/seed.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { StockModule } from './modules/stock/stock.module';
+import { TransfersModule } from './modules/transfers/transfers.module';
 import { WriteOffsModule } from './modules/write-offs/write-offs.module';
 
 @Module({
@@ -36,6 +37,7 @@ import { WriteOffsModule } from './modules/write-offs/write-offs.module';
     WriteOffsModule,
     InventoryModule,
     ReportsModule,
+    TransfersModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
