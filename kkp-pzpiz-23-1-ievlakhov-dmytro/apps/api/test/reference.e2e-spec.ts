@@ -23,8 +23,8 @@ describe('Reference dictionaries (e2e)', () => {
     const name = `Cat-${Date.now()}`;
     const created = await request(app.getHttpServer()).post('/api/categories').set(auth()).send({ name }).expect(201);
     expect(created.body).toMatchObject({ name, isActive: true });
-    const list = await request(app.getHttpServer()).get('/api/categories').set(auth()).expect(200);
-    expect(list.body.items.some((c: any) => c.id === created.body.id)).toBe(true);
+    const got = await request(app.getHttpServer()).get(`/api/categories/${created.body.id}`).set(auth()).expect(200);
+    expect(got.body).toMatchObject({ id: created.body.id, name });
   });
 
   it('archived category disappears from default list but returns with includeInactive', async () => {

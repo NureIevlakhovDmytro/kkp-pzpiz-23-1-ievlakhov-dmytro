@@ -25,7 +25,7 @@ describe('Master data: seeds, currency, settings, RBAC (e2e)', () => {
   it('seeds a base currency and a settings singleton pointing at it', async () => {
     const settings = await request(app.getHttpServer()).get('/api/admin/settings').set(auth()).expect(200);
     expect(settings.body.baseCurrencyId).toBeTruthy();
-    const currencies = await request(app.getHttpServer()).get('/api/currencies').set(auth()).expect(200);
+    const currencies = await request(app.getHttpServer()).get('/api/currencies?limit=200').set(auth()).expect(200);
     expect(currencies.body.items.some((c: any) => c.code === 'UAH')).toBe(true);
   });
 
