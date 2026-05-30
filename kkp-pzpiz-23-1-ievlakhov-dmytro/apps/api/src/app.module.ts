@@ -15,6 +15,7 @@ import { ReferenceModule } from './reference/reference.module';
 import { SeedModule } from './seed/seed.module';
 import { SettingsModule } from './settings/settings.module';
 import { StockModule } from './stock/stock.module';
+import { WriteOffsModule } from './write-offs/write-offs.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { StockModule } from './stock/stock.module';
     SeedModule,
     StockModule,
     ReceiptsModule,
+    WriteOffsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
