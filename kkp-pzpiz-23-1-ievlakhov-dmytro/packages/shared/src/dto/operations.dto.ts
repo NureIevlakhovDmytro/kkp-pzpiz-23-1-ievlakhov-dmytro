@@ -88,3 +88,37 @@ export interface InventoryReportDto {
   surplusTotalBase: number;
   rateMissing: boolean;
 }
+
+export interface TransferLineDto {
+  id: string;
+  batchId: string;
+  quantity: number;
+}
+
+export interface TransferDto {
+  id: string;
+  number: string;
+  fromLocationId: string;
+  toLocationId: string;
+  date: string;
+  status: DocumentStatus;
+  reversesId: string | null;
+  lines: TransferLineDto[];
+}
+
+export type StockMovementType =
+  | 'RECEIPT'
+  | 'WRITE_OFF'
+  | 'ADJUSTMENT'
+  | 'TRANSFER_IN'
+  | 'TRANSFER_OUT';
+
+export interface StockMovementRowDto {
+  date: string;
+  documentType: StockMovementType;
+  documentNumber: string;
+  productId: string;
+  batchId: string;
+  locationId: string;
+  quantityChange: number;
+}
