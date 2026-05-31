@@ -41,6 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       router.replace('/(auth)/login');
     });
+    // Bootstrap the session on mount; refresh() updates state asynchronously after I/O.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh();
     return () => setUnauthorizedHandler(null);
   }, [refresh]);
