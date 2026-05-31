@@ -133,7 +133,10 @@ export function ExchangeRatesPanel() {
               <Button variant="ghost" onClick={() => setOpen(false)}>
                 {t('common.cancel')}
               </Button>
-              <Button onClick={() => void onCreate()} disabled={!form.currencyId || create.isPending}>
+              <Button
+                onClick={() => void onCreate()}
+                disabled={!form.currencyId || !(form.rateToBase > 0) || create.isPending}
+              >
                 {t('common.create')}
               </Button>
             </div>
