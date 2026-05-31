@@ -1,6 +1,6 @@
 {
   "nav": { "dashboard": "Огляд", "products": "Номенклатура", "reference": "Довідники", "batches": "Партії", "stock": "Залишки", "receipts": "Приймання", "transfers": "Переміщення", "writeOffs": "Списання", "inventory": "Інвентаризація", "reports": "Звіти", "notifications": "Сповіщення", "admin": "Користувачі", "settings": "Налаштування" },
-  "common": { "create": "Створити", "edit": "Редагувати", "archive": "Архівувати", "cancel": "Скасувати", "save": "Зберегти", "search": "Пошук", "actions": "Дії", "confirm": "Підтвердити", "yes": "Так", "no": "Ні", "loading": "Завантаження…", "empty": "Немає даних" },
+  "common": { "create": "Створити", "edit": "Редагувати", "archive": "Архівувати", "cancel": "Скасувати", "save": "Зберегти", "search": "Пошук", "actions": "Дії", "confirm": "Підтвердити", "yes": "Так", "no": "Ні", "loading": "Завантаження…", "empty": "Немає даних", "status": "Статус" },
   "auth": { "title": "Складський облік", "email": "Email", "password": "Пароль", "signIn": "Увійти", "signingIn": "Вхід…", "logout": "Вийти" },
   "dashboard": { "subtitle": "Зведення по складу", "lowStock": "Критичні залишки", "nearExpiry": "Близькі терміни", "recentOps": "Останні операції" },
   "products": { "title": "Номенклатура", "subtitle": "Товарно-матеріальні цінності", "name": "Назва", "sku": "Артикул", "unit": "Одиниця", "category": "Категорія", "minStock": "Мін. залишок", "status": "Статус", "active": "Активний", "archived": "Архів", "new": "Новий товар", "edit": "Редагувати товар", "archiveConfirm": "Архівувати цей товар?" },

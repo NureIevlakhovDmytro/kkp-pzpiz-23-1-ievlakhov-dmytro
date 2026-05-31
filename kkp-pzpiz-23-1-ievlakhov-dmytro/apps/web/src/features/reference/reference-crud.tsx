@@ -60,7 +60,7 @@ export function ReferenceCrud({ resource, fields, columns, t }: ReferenceCrudPro
     })),
     {
       key: 'status',
-      header: t('reference.status' as never) || 'Status',
+      header: t('common.status'),
       cell: (r: RefEntity) => (
         <StatusBadge tone={r.isActive ? 'active' : 'archived'}>
           {r.isActive ? t('products.active') : t('products.archived')}
