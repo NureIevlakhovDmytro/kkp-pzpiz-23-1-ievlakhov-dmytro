@@ -1,4 +1,5 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import type { ReceiptDto } from '@app/shared';
 import { DocumentStatus } from '@app/shared';
@@ -9,13 +10,20 @@ import { DataTable, type Column } from '@/components/data/data-table';
 import { useLookups } from '@/lib/use-lookups';
 import { useCurrencies } from '@/lib/use-currencies';
 import { useReceiptMutations } from './use-receipts';
+import { receiptsApi } from './receipts.api';
 
 export function ReceiptDetail({ doc, onClose }: { doc: ReceiptDto | null; onClose: () => void }) {
   const { t } = useTranslation();
   const { productName } = useLookups();
   const { currencyName } = useCurrencies();
   const { reverse } = useReceiptMutations();
+  const { data: full } = useQuery({
+    queryKey: ['receipts', doc?.id],
+    queryFn: () => receiptsApi.get(doc!.id),
+    enabled: !!doc,
+  });
   if (!doc) return null;
+  const lines = full?.lines ?? [];
   const columns: Column<ReceiptDto['lines'][number]>[] = [
     { key: 'productId', header: t('receipts.product'), cell: (l) => productName[l.productId] ?? '—' },
     {
@@ -61,7 +69,7 @@ export function ReceiptDetail({ doc, onClose }: { doc: ReceiptDto | null; onClos
           <div className="text-sm text-muted-foreground">
             <span className="nums">{doc.date}</span>
           </div>
-          <DataTable columns={columns} rows={doc.lines} />
+          <DataTable columns={columns} rows={lines} />
           {doc.status === DocumentStatus.POSTED && (
             <div className="flex justify-end">
               <ReverseButton

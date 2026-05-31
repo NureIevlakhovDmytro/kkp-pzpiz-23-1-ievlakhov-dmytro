@@ -30,6 +30,7 @@ export function DataTable<T>({
   empty?: string;
   getRowKey?: (row: T, index: number) => string | number;
 }) {
+  const data = rows ?? [];
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <Table>
@@ -59,7 +60,7 @@ export function DataTable<T>({
                 ))}
               </TableRow>
             ))
-          ) : rows.length === 0 ? (
+          ) : data.length === 0 ? (
             <TableRow>
               <TableCell
                 colSpan={columns.length}
@@ -69,7 +70,7 @@ export function DataTable<T>({
               </TableCell>
             </TableRow>
           ) : (
-            rows.map((row, i) => (
+            data.map((row, i) => (
               <TableRow
                 key={getRowKey ? getRowKey(row, i) : ((row as { id?: string | number }).id ?? i)}
                 className="animate-in fade-in slide-in-from-bottom-1 hover:bg-muted/50"
