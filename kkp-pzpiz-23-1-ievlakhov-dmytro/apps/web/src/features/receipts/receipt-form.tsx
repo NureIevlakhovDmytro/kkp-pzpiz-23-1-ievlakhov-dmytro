@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +35,7 @@ export function ReceiptForm({ open, onClose }: { open: boolean; onClose: () => v
   const { options: currencyOptions, items: currencies } = useCurrencies();
   const { post } = useReceiptMutations();
   const defaultCurrency = currencies[0]?.id ?? '';
-  const { register, control, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
+  const { register, control, handleSubmit, watch, setValue, getValues, reset } = useForm<FormValues>({
     defaultValues: {
       supplierId: '',
       locationId: '',
@@ -44,30 +45,46 @@ export function ReceiptForm({ open, onClose }: { open: boolean; onClose: () => v
   });
   const { fields, append, remove } = useFieldArray({ control, name: 'lines' });
 
+  useEffect(() => {
+    if (currencies.length === 0) return;
+    const def = currencies[0].id;
+    const current = getValues('lines');
+    if (current.some((l) => !l.currencyId)) {
+      setValue(
+        'lines',
+        current.map((l) => (l.currencyId ? l : { ...l, currencyId: def })),
+      );
+    }
+  }, [currencies, getValues, setValue]);
+
   async function onSubmit(values: FormValues) {
     if (!values.locationId) {
       toast.error(t('receipts.location'));
+      return;
+    }
+    const started = values.lines.filter(
+      (l) => l.productId || l.batchNumber || l.quantity > 0 || l.expiryDate,
+    );
+    const complete = started.filter(
+      (l) => l.productId && l.batchNumber && l.quantity > 0 && l.currencyId,
+    );
+    if (started.length === 0 || complete.length !== started.length) {
+      toast.error(t('receipts.lineInvalid'));
       return;
     }
     const body: ReceiptInput = {
       supplierId: values.supplierId || undefined,
       locationId: values.locationId,
       date: values.date,
-      lines: values.lines
-        .filter((l) => l.productId && l.batchNumber && l.quantity > 0 && l.currencyId)
-        .map((l) => ({
-          productId: l.productId,
-          batchNumber: l.batchNumber,
-          expiryDate: l.expiryDate || undefined,
-          quantity: Number(l.quantity),
-          unitCost: Number(l.unitCost),
-          currencyId: l.currencyId,
-        })),
+      lines: complete.map((l) => ({
+        productId: l.productId,
+        batchNumber: l.batchNumber,
+        expiryDate: l.expiryDate || undefined,
+        quantity: Number(l.quantity),
+        unitCost: Number(l.unitCost),
+        currencyId: l.currencyId,
+      })),
     };
-    if (body.lines.length === 0) {
-      toast.error(t('receipts.product'));
-      return;
-    }
     try {
       await post.mutateAsync({ body, key: crypto.randomUUID() });
       toast.success(t('common.save'));
@@ -112,7 +129,7 @@ export function ReceiptForm({ open, onClose }: { open: boolean; onClose: () => v
           <LinesEditor
             count={fields.length}
             onAdd={() =>
-              append({ productId: '', batchNumber: '', expiryDate: '', quantity: 0, unitCost: 0, currencyId: defaultCurrency })
+              append({ productId: '', batchNumber: '', expiryDate: '', quantity: 0, unitCost: 0, currencyId: currencies[0]?.id ?? '' })
             }
             onRemove={remove}
             addLabel={t('receipts.addLine')}
