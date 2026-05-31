@@ -13,6 +13,7 @@ import { EntitySelect } from '@/components/data/entity-select';
 import { ConfirmDialog } from '@/components/data/confirm-dialog';
 import { ApiError } from '@/lib/api-client';
 import { useCurrencies } from '@/lib/use-currencies';
+import { today } from '@/lib/date';
 import { useRates, useRateMutations } from './use-settings';
 
 const ALL = '__all__';
@@ -28,7 +29,7 @@ export function ExchangeRatesPanel() {
   const [form, setForm] = useState({
     currencyId: '',
     rateToBase: 0,
-    effectiveDate: new Date().toISOString().slice(0, 10),
+    effectiveDate: today(),
   });
 
   async function onCreate() {

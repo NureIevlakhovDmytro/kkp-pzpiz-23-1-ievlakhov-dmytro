@@ -16,18 +16,17 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable, type Column } from '@/components/data/data-table';
 import { StatusBadge } from '@/components/data/status-badge';
+import { today, daysAgo } from '@/lib/date';
 import { useLossStructure } from './use-reports';
 import type { LossStructureRowDto } from '@app/shared';
 
 export function LossStructureReport() {
   const { t, i18n } = useTranslation();
-  const today = new Date().toISOString().slice(0, 10);
-  const monthAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
-  const [from, setFrom] = useState(monthAgo);
-  const [to, setTo] = useState(today);
+  const [from, setFrom] = useState(daysAgo(30));
+  const [to, setTo] = useState(today());
   const [range, setRange] = useState<{ from: string; to: string } | null>({
-    from: monthAgo,
-    to: today,
+    from: daysAgo(30),
+    to: today(),
   });
   const { data, isLoading } = useLossStructure(range?.from ?? '', range?.to ?? '', !!range);
 

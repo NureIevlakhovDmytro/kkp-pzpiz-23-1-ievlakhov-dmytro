@@ -15,6 +15,7 @@ import { StatusBadge } from '@/components/data/status-badge';
 import { EntitySelect } from '@/components/data/entity-select';
 import { ApiError } from '@/lib/api-client';
 import { useLookups } from '@/lib/use-lookups';
+import { today } from '@/lib/date';
 import { toast } from 'sonner';
 import { useInventoryList, useInventoryMutations } from './use-inventory';
 
@@ -26,7 +27,7 @@ export function InventoryPage() {
   const { create } = useInventoryMutations();
   const [open, setOpen] = useState(false);
   const [locationId, setLocationId] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(today());
 
   async function onCreate() {
     try {

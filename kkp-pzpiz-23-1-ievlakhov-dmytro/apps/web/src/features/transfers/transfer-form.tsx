@@ -12,6 +12,7 @@ import { EntitySelect } from '@/components/data/entity-select';
 import { LinesEditor } from '@/components/data/lines-editor';
 import { ApiError, apiFetch } from '@/lib/api-client';
 import { useLookups } from '@/lib/use-lookups';
+import { today } from '@/lib/date';
 import { useTransferMutations } from './use-transfers';
 import type { TransferInput } from './transfers.api';
 
@@ -29,7 +30,7 @@ export function TransferForm({ open, onClose }: { open: boolean; onClose: () => 
   const batchesQ = useQuery({ queryKey: ['batches', 'forSelect'], queryFn: () => apiFetch<Paginated<BatchDto>>('/batches?limit=300') });
   const batchOptions = (batchesQ.data?.items ?? []).map((b) => ({ value: b.id, label: b.batchNumber }));
   const { register, control, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
-    defaultValues: { fromLocationId: '', toLocationId: '', date: new Date().toISOString().slice(0, 10), lines: [{ batchId: '', quantity: 0 }] },
+    defaultValues: { fromLocationId: '', toLocationId: '', date: today(), lines: [{ batchId: '', quantity: 0 }] },
   });
   const { fields, append, remove } = useFieldArray({ control, name: 'lines' });
 

@@ -12,6 +12,7 @@ import { LinesEditor } from '@/components/data/lines-editor';
 import { ApiError } from '@/lib/api-client';
 import { useLookups } from '@/lib/use-lookups';
 import { useCurrencies } from '@/lib/use-currencies';
+import { today } from '@/lib/date';
 import { useReceiptMutations } from './use-receipts';
 import type { ReceiptInput } from './receipts.api';
 
@@ -39,7 +40,7 @@ export function ReceiptForm({ open, onClose }: { open: boolean; onClose: () => v
     defaultValues: {
       supplierId: '',
       locationId: '',
-      date: new Date().toISOString().slice(0, 10),
+      date: today(),
       lines: [{ productId: '', batchNumber: '', expiryDate: '', quantity: 0, unitCost: 0, currencyId: defaultCurrency }],
     },
   });

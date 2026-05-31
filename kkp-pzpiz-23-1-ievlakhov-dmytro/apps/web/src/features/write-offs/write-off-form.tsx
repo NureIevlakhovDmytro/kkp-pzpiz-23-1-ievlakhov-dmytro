@@ -12,6 +12,7 @@ import { EntitySelect } from '@/components/data/entity-select';
 import { LinesEditor } from '@/components/data/lines-editor';
 import { ApiError } from '@/lib/api-client';
 import { useLookups } from '@/lib/use-lookups';
+import { today } from '@/lib/date';
 import { useWriteOffMutations, useWriteOffReasons } from './use-write-offs';
 import { writeOffsApi, type WriteOffInput } from './write-offs.api';
 
@@ -23,7 +24,7 @@ export function WriteOffForm({ open, onClose, batches }: { open: boolean; onClos
   const { data: reasons } = useWriteOffReasons();
   const { post } = useWriteOffMutations();
   const { register, control, handleSubmit, watch, setValue, reset } = useForm<FormValues>({
-    defaultValues: { date: new Date().toISOString().slice(0, 10), reasonId: '', comment: '', lines: [{ batchId: '', locationId: '', quantity: 0 }] },
+    defaultValues: { date: today(), reasonId: '', comment: '', lines: [{ batchId: '', locationId: '', quantity: 0 }] },
   });
   const { fields, append, remove } = useFieldArray({ control, name: 'lines' });
   const [fefo, setFefo] = useState({ productId: '', locationId: '', quantity: '10' });
