@@ -18,5 +18,6 @@ export function useLookups() {
     categoryName: mapById(categories.data?.items ?? [], (c) => c.name),
     products: products.data?.items ?? [],
     locations: locations.data?.items ?? [],
+    suppliers: suppliers.data?.items ?? [],
   };
 }
