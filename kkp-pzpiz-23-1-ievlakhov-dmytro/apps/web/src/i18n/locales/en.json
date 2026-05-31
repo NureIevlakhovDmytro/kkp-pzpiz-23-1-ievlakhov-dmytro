@@ -12,7 +12,8 @@
     "reports": "Reports",
     "notifications": "Notifications",
     "admin": "Users",
-    "settings": "Settings"
+    "settings": "Settings",
+    "guide": "Guide"
   },
   "navGroups": {
     "overview": "Overview",

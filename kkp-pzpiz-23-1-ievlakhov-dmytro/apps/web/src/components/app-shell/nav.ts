@@ -13,6 +13,7 @@ import {
   Bell,
   Users,
   Settings,
+  BookOpen,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -34,6 +35,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
       { href: '/notifications', labelKey: 'nav.notifications', icon: Bell },
+      { href: '/guide', labelKey: 'nav.guide', icon: BookOpen },
     ],
   },
   {

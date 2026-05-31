@@ -12,7 +12,8 @@
     "reports": "Звіти",
     "notifications": "Сповіщення",
     "admin": "Користувачі",
-    "settings": "Налаштування"
+    "settings": "Налаштування",
+    "guide": "Довідка"
   },
   "navGroups": {
     "overview": "Огляд",
