@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/data/page-header';
 import { DataTable, type Column } from '@/components/data/data-table';
 import { DocStatusBadge } from '@/components/data/doc-status-badge';
 import { apiFetch } from '@/lib/api-client';
+import { listQuery } from '@/lib/pagination';
 import { useQuery } from '@tanstack/react-query';
 import { useWriteOffReasons, useWriteOffs } from './use-write-offs';
 import { WriteOffForm } from './write-off-form';
@@ -17,7 +18,7 @@ export function WriteOffsPage() {
   const { t } = useTranslation();
   const { data, isLoading } = useWriteOffs();
   const { data: reasons } = useWriteOffReasons();
-  const batchesQ = useQuery({ queryKey: ['batches', 'forSelect'], queryFn: () => apiFetch<Paginated<BatchDto>>('/batches?limit=300') });
+  const batchesQ = useQuery({ queryKey: ['batches', 'forSelect'], queryFn: () => apiFetch<Paginated<BatchDto>>(`/batches${listQuery()}`) });
   const [formOpen, setFormOpen] = useState(false);
   const [detail, setDetail] = useState<WriteOffDto | null>(null);
 
