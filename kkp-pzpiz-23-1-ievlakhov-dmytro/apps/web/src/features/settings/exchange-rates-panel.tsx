@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Pencil, Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import type { ExchangeRateDto } from '@app/shared';
@@ -23,8 +23,9 @@ export function ExchangeRatesPanel() {
   const { options: currencyOptions, currencyName } = useCurrencies();
   const [filter, setFilter] = useState(ALL);
   const { data, isLoading } = useRates(filter === ALL ? undefined : filter);
-  const { create, remove } = useRateMutations();
+  const { create, update, remove } = useRateMutations();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<ExchangeRateDto | null>(null);
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [form, setForm] = useState({
     currencyId: '',
@@ -32,14 +33,22 @@ export function ExchangeRatesPanel() {
     effectiveDate: today(),
   });
 
-  async function onCreate() {
+  async function onSubmit() {
     try {
-      await create.mutateAsync({
-        currencyId: form.currencyId,
-        rateToBase: Number(form.rateToBase),
-        effectiveDate: form.effectiveDate,
-      });
+      if (editing) {
+        await update.mutateAsync({
+          id: editing.id,
+          body: { rateToBase: Number(form.rateToBase), effectiveDate: form.effectiveDate },
+        });
+      } else {
+        await create.mutateAsync({
+          currencyId: form.currencyId,
+          rateToBase: Number(form.rateToBase),
+          effectiveDate: form.effectiveDate,
+        });
+      }
       toast.success(t('common.save'));
+      setEditing(null);
       setOpen(false);
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Error');
@@ -68,14 +77,31 @@ export function ExchangeRatesPanel() {
       header: '',
       className: 'text-right',
       cell: (r) => (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-danger"
-          onClick={() => setToDelete(r.id)}
-        >
-          {t('settings.delete')}
-        </Button>
+        <div className="flex justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setEditing(r);
+              setForm({
+                currencyId: r.currencyId,
+                rateToBase: r.rateToBase,
+                effectiveDate: r.effectiveDate,
+              });
+              setOpen(true);
+            }}
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-danger"
+            onClick={() => setToDelete(r.id)}
+          >
+            {t('settings.delete')}
+          </Button>
+        </div>
       ),
     },
   ];
@@ -91,16 +117,31 @@ export function ExchangeRatesPanel() {
             options={[{ value: ALL, label: t('notifications.all') }, ...currencyOptions]}
           />
         </div>
-        <Button size="sm" onClick={() => setOpen(true)}>
+        <Button
+          size="sm"
+          onClick={() => {
+            setEditing(null);
+            setForm({ currencyId: '', rateToBase: 0, effectiveDate: today() });
+            setOpen(true);
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" />
           {t('settings.newRate')}
         </Button>
       </div>
       <DataTable columns={columns} rows={data?.items ?? []} loading={isLoading} empty={t('common.empty')} />
-      <Dialog open={open} onOpenChange={(o) => !o && setOpen(false)}>
+      <Dialog
+        open={open}
+        onOpenChange={(o) => {
+          if (!o) {
+            setOpen(false);
+            setEditing(null);
+          }
+        }}
+      >
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>{t('settings.newRate')}</DialogTitle>
+            <DialogTitle>{editing ? t('common.edit') : t('settings.newRate')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1.5">
@@ -109,6 +150,7 @@ export function ExchangeRatesPanel() {
                 value={form.currencyId}
                 onChange={(v) => setForm((s) => ({ ...s, currencyId: v }))}
                 options={currencyOptions}
+                disabled={!!editing}
               />
             </div>
             <div className="space-y-1.5">
@@ -130,14 +172,25 @@ export function ExchangeRatesPanel() {
               />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setOpen(false)}>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setOpen(false);
+                  setEditing(null);
+                }}
+              >
                 {t('common.cancel')}
               </Button>
               <Button
-                onClick={() => void onCreate()}
-                disabled={!form.currencyId || !(form.rateToBase > 0) || create.isPending}
+                onClick={() => void onSubmit()}
+                disabled={
+                  !form.currencyId ||
+                  !(form.rateToBase > 0) ||
+                  create.isPending ||
+                  update.isPending
+                }
               >
-                {t('common.create')}
+                {editing ? t('common.save') : t('common.create')}
               </Button>
             </div>
           </div>

@@ -275,6 +275,7 @@
     "filterCurrency": "Валюта",
     "delete": "Видалити",
     "deleteRateConfirm": "Видалити цей курс?",
+    "deleteCurrencyConfirm": "Видалити цю валюту?",
     "runBackup": "Створити резервну копію",
     "backupStarted": "Резервне копіювання запущено",
     "export": "Експорт",

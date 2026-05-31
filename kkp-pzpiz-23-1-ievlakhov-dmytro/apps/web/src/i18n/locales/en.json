@@ -275,6 +275,7 @@
     "filterCurrency": "Currency",
     "delete": "Delete",
     "deleteRateConfirm": "Delete this rate?",
+    "deleteCurrencyConfirm": "Delete this currency?",
     "runBackup": "Create backup",
     "backupStarted": "Backup started",
     "export": "Export",

@@ -35,12 +35,15 @@ export const settingsApi = {
     apiFetch<CurrencyDto>('/currencies', { method: 'POST', body }),
   updateCurrency: (id: string, body: Partial<CurrencyInput>) =>
     apiFetch<CurrencyDto>(`/currencies/${id}`, { method: 'PATCH', body }),
+  deleteCurrency: (id: string) => apiFetch<void>(`/currencies/${id}`, { method: 'DELETE' }),
   rates: (currencyId?: string) =>
     apiFetch<Paginated<ExchangeRateDto>>(
       `/exchange-rates${listQuery(currencyId ? { currencyId } : undefined)}`,
     ),
   createRate: (body: RateInput) =>
     apiFetch<ExchangeRateDto>('/exchange-rates', { method: 'POST', body }),
+  updateRate: (id: string, body: Partial<Omit<RateInput, 'currencyId'>>) =>
+    apiFetch<ExchangeRateDto>(`/exchange-rates/${id}`, { method: 'PATCH', body }),
   deleteRate: (id: string) =>
     apiFetch<{ status: string }>(`/exchange-rates/${id}`, { method: 'DELETE' }),
   backup: () => apiFetch<{ status: string }>('/admin/backup', { method: 'POST' }),

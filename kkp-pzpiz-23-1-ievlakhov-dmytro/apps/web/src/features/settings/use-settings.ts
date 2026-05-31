@@ -29,6 +29,10 @@ export function useCurrencyMutations() {
         settingsApi.updateCurrency(v.id, v.body),
       onSuccess: invalidate,
     }),
+    remove: useMutation({
+      mutationFn: (id: string) => settingsApi.deleteCurrency(id),
+      onSuccess: invalidate,
+    }),
   };
 }
 export function useRates(currencyId?: string) {
@@ -43,6 +47,11 @@ export function useRateMutations() {
   return {
     create: useMutation({
       mutationFn: (b: RateInput) => settingsApi.createRate(b),
+      onSuccess: invalidate,
+    }),
+    update: useMutation({
+      mutationFn: (v: { id: string; body: Partial<Omit<RateInput, 'currencyId'>> }) =>
+        settingsApi.updateRate(v.id, v.body),
       onSuccess: invalidate,
     }),
     remove: useMutation({
