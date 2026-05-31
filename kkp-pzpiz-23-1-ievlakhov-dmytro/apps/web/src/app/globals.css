@@ -1,2 +1,54 @@
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 97%;
+    --foreground: 24 10% 12%;
+    --card: 40 33% 99%;
+    --card-foreground: 24 10% 12%;
+    --popover: 40 33% 99%;
+    --popover-foreground: 24 10% 12%;
+    --primary: 184 60% 26%;
+    --primary-foreground: 40 33% 97%;
+    --muted: 35 18% 92%;
+    --muted-foreground: 24 8% 40%;
+    --accent: 184 30% 90%;
+    --accent-foreground: 184 60% 20%;
+    --border: 30 12% 86%;
+    --input: 30 12% 86%;
+    --ring: 184 60% 26%;
+    --danger: 4 74% 46%;
+    --warning: 34 92% 48%;
+    --info: 201 78% 38%;
+    --success: 160 55% 34%;
+    --radius: 0.4rem;
+  }
+  .dark {
+    --background: 24 12% 9%;
+    --foreground: 40 30% 92%;
+    --card: 24 12% 12%;
+    --card-foreground: 40 30% 92%;
+    --popover: 24 12% 12%;
+    --popover-foreground: 40 30% 92%;
+    --primary: 184 55% 40%;
+    --primary-foreground: 24 12% 9%;
+    --muted: 24 8% 18%;
+    --muted-foreground: 40 12% 62%;
+    --accent: 184 30% 22%;
+    --accent-foreground: 40 30% 92%;
+    --border: 30 6% 24%;
+    --input: 30 6% 24%;
+    --ring: 184 55% 45%;
+    --danger: 4 74% 56%;
+    --warning: 34 92% 56%;
+    --info: 201 78% 52%;
+    --success: 160 55% 46%;
+  }
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground font-sans; }
+  /* tabular figures everywhere numbers matter */
+  .nums { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  h1, h2, h3 { @apply font-display tracking-tight; }
+}
