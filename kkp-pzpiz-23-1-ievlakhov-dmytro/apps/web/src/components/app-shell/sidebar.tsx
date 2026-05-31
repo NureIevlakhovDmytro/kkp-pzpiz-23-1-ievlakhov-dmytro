@@ -22,7 +22,7 @@ export function Sidebar() {
       <nav className="flex-1 space-y-5 overflow-y-auto p-3">
         {visibleNavGroups(user?.role).map((group) => (
           <div key={group.labelKey} className="space-y-0.5">
-            <p className="px-3 pb-1 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground/70">
+            <p className="px-3 pb-1 text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
               {t(group.labelKey)}
             </p>
             {group.items.map((item) => {
