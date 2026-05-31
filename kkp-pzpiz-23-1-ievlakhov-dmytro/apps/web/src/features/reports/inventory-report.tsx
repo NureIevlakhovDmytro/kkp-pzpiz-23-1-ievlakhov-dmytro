@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { EntitySelect } from '@/components/data/entity-select';
 import { StatusBadge } from '@/components/data/status-badge';
-import { useInventoryList, useInventoryReport } from './use-reports';
+import { useInventoryList, useInventoryReport } from '@/features/inventory/use-inventory';
 
 export function InventoryReport() {
   const { t } = useTranslation();
