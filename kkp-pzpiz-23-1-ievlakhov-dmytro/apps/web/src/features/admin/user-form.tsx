@@ -48,6 +48,7 @@ export function UserForm({
       },
     });
   useEffect(() => {
+    if (!open) return;
     if (editing)
       reset({
         email: editing.email,
@@ -64,7 +65,7 @@ export function UserForm({
         role: Role.USER,
         locale: Locale.UK,
       });
-  }, [editing, reset]);
+  }, [open, editing, reset]);
 
   async function onSubmit(v: FormValues) {
     try {

@@ -34,6 +34,10 @@ export function MaintenancePanel() {
       const res = await fetch(`${API_BASE}${settingsApi.exportUrl(entity, format)}`, {
         headers: { Authorization: `Bearer ${getToken() ?? ''}` },
       });
+      if (!res.ok) {
+        toast.error('Error');
+        return;
+      }
       const text = await res.text();
       const blob = new Blob([text], {
         type: format === 'csv' ? 'text/csv' : 'application/json',
