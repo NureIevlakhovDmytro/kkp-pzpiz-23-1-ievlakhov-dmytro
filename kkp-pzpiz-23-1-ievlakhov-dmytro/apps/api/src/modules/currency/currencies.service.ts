@@ -5,7 +5,11 @@ import { Repository } from 'typeorm';
 
 import { AppException } from '../../core/common/api-exception';
 import { paginate, PaginationQueryDto } from '../../core/common/dto/pagination.dto';
+import { AppSettingsEntity } from '../../core/database/entities/app-settings.entity';
+import { BatchEntity } from '../../core/database/entities/batch.entity';
 import { CurrencyEntity } from '../../core/database/entities/currency.entity';
+import { ExchangeRateEntity } from '../../core/database/entities/exchange-rate.entity';
+import { ReceiptLineEntity } from '../../core/database/entities/receipt-line.entity';
 import { CreateCurrencyDto, UpdateCurrencyDto } from './dto/currency.dto';
 
 @Injectable()
@@ -41,5 +45,22 @@ export class CurrenciesService {
     const c = await this.getById(id);
     Object.assign(c, dto);
     return this.repo.save(c);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.getById(id);
+    const m = this.repo.manager;
+    const settings = await m.findOne(AppSettingsEntity, { where: {} });
+    if (settings?.baseCurrencyId === id) {
+      throw new AppException(ErrorCode.CONFLICT, 'Cannot delete the base currency');
+    }
+    const refs =
+      (await m.count(BatchEntity, { where: { currencyId: id } })) +
+      (await m.count(ReceiptLineEntity, { where: { currencyId: id } })) +
+      (await m.count(ExchangeRateEntity, { where: { currencyId: id } }));
+    if (refs > 0) {
+      throw new AppException(ErrorCode.CONFLICT, 'Currency is in use and cannot be deleted');
+    }
+    await this.repo.delete(id);
   }
 }

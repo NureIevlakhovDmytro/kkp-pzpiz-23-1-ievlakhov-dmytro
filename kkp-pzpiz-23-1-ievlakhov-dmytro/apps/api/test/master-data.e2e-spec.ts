@@ -63,6 +63,46 @@ describe('Master data: seeds, currency, settings, RBAC (e2e)', () => {
       .send({ nearExpiryDays: 3 }); // restore
   });
 
+  it('creates and deletes an unused currency (204), then GET is 404', async () => {
+    const created = await request(app.getHttpServer())
+      .post('/api/currencies')
+      .set(auth())
+      .send({ code: 'JPY', name: 'Japanese Yen', symbol: '¥' })
+      .expect(201);
+    const id = created.body.id;
+    await request(app.getHttpServer()).delete(`/api/currencies/${id}`).set(auth()).expect(204);
+    await request(app.getHttpServer()).get(`/api/currencies/${id}`).set(auth()).expect(404);
+  });
+
+  it('refuses to delete the base currency (409)', async () => {
+    const settings = await request(app.getHttpServer())
+      .get('/api/admin/settings')
+      .set(auth())
+      .expect(200);
+    await request(app.getHttpServer())
+      .delete(`/api/currencies/${settings.body.baseCurrencyId}`)
+      .set(auth())
+      .expect(409);
+  });
+
+  it('refuses to delete a currency referenced by an exchange rate (409)', async () => {
+    const created = await request(app.getHttpServer())
+      .post('/api/currencies')
+      .set(auth())
+      .send({ code: 'CHF', name: 'Swiss Franc', symbol: '₣' })
+      .expect(201);
+    const id = created.body.id;
+    const rate = await request(app.getHttpServer())
+      .post('/api/exchange-rates')
+      .set(auth())
+      .send({ currencyId: id, rateToBase: 42.5, effectiveDate: '2024-01-01' })
+      .expect(201);
+    await request(app.getHttpServer()).delete(`/api/currencies/${id}`).set(auth()).expect(409);
+    // clean up: drop the rate then the currency
+    await request(app.getHttpServer()).delete(`/api/exchange-rates/${rate.body.id}`).set(auth());
+    await request(app.getHttpServer()).delete(`/api/currencies/${id}`).set(auth());
+  });
+
   it('enforces RBAC: a USER cannot create reference data (403)', async () => {
     // create a USER via admin endpoint is not in this plan; assert ADMIN-guard by forging no role is impossible here,
     // so instead verify the guard rejects an unauthenticated request (401) and that USER-forbidden routes carry @Roles(ADMIN).
