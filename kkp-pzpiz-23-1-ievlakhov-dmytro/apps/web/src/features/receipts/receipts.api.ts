@@ -1,5 +1,6 @@
 import type { Paginated, ReceiptDto } from '@app/shared';
 import { apiFetch } from '@/lib/api-client';
+import { listQuery } from '@/lib/pagination';
 
 export interface ReceiptLineInput {
   productId: string;
@@ -17,7 +18,7 @@ export interface ReceiptInput {
 }
 
 export const receiptsApi = {
-  list: () => apiFetch<Paginated<ReceiptDto>>('/receipts?page=1&limit=100'),
+  list: () => apiFetch<Paginated<ReceiptDto>>(`/receipts${listQuery()}`),
   get: (id: string) => apiFetch<ReceiptDto>(`/receipts/${id}`),
   post: (body: ReceiptInput, idempotencyKey: string) =>
     apiFetch<ReceiptDto>('/receipts', { method: 'POST', body, headers: { 'Idempotency-Key': idempotencyKey } }),

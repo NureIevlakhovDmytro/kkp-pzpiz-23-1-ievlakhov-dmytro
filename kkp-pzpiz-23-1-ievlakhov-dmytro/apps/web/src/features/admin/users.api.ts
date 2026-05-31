@@ -1,5 +1,6 @@
 import type { Paginated, Role, Locale, UserDto } from '@app/shared';
 import { apiFetch } from '@/lib/api-client';
+import { listQuery } from '@/lib/pagination';
 
 export interface CreateUserInput {
   email: string;
@@ -16,7 +17,7 @@ export interface UpdateUserInput {
 }
 
 export const usersApi = {
-  list: () => apiFetch<Paginated<UserDto>>('/admin/users?page=1&limit=100'),
+  list: () => apiFetch<Paginated<UserDto>>(`/admin/users${listQuery()}`),
   create: (body: CreateUserInput) =>
     apiFetch<UserDto>('/admin/users', { method: 'POST', body }),
   update: (id: string, body: UpdateUserInput) =>

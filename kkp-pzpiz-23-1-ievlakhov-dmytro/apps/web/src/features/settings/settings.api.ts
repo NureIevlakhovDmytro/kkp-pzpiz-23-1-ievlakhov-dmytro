@@ -6,6 +6,7 @@ import type {
   Paginated,
 } from '@app/shared';
 import { apiFetch } from '@/lib/api-client';
+import { listQuery } from '@/lib/pagination';
 
 export interface UpdateSettingsInput {
   nearExpiryDays?: number;
@@ -29,14 +30,14 @@ export const settingsApi = {
   get: () => apiFetch<AppSettingsDto>('/admin/settings'),
   update: (body: UpdateSettingsInput) =>
     apiFetch<AppSettingsDto>('/admin/settings', { method: 'PATCH', body }),
-  currencies: () => apiFetch<Paginated<CurrencyDto>>('/currencies?page=1&limit=100'),
+  currencies: () => apiFetch<Paginated<CurrencyDto>>(`/currencies${listQuery()}`),
   createCurrency: (body: CurrencyInput) =>
     apiFetch<CurrencyDto>('/currencies', { method: 'POST', body }),
   updateCurrency: (id: string, body: Partial<CurrencyInput>) =>
     apiFetch<CurrencyDto>(`/currencies/${id}`, { method: 'PATCH', body }),
   rates: (currencyId?: string) =>
     apiFetch<Paginated<ExchangeRateDto>>(
-      `/exchange-rates?page=1&limit=100${currencyId ? `&currencyId=${currencyId}` : ''}`,
+      `/exchange-rates${listQuery(currencyId ? { currencyId } : undefined)}`,
     ),
   createRate: (body: RateInput) =>
     apiFetch<ExchangeRateDto>('/exchange-rates', { method: 'POST', body }),
