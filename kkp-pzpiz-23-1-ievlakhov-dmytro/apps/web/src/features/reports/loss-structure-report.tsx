@@ -30,13 +30,11 @@ export function LossStructureReport() {
   });
   const { data, isLoading } = useLossStructure(range?.from ?? '', range?.to ?? '', !!range);
 
-  type RowWithId = LossStructureRowDto & { id: string };
-
   const label = (r: LossStructureRowDto) => (i18n.language === 'en' ? r.nameEn : r.nameUk);
-  const rows: RowWithId[] = (data?.rows ?? []).map((r) => ({ ...r, id: r.reasonId }));
+  const rows = data?.rows ?? [];
   const chartData = rows.map((r) => ({ name: label(r), value: r.totalBase }));
 
-  const columns: Column<RowWithId>[] = [
+  const columns: Column<LossStructureRowDto>[] = [
     { key: 'reason', header: t('reports.reason'), cell: (r) => label(r) },
     {
       key: 'amount',
@@ -91,7 +89,7 @@ export function LossStructureReport() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <DataTable columns={columns} rows={rows} />
+              <DataTable columns={columns} rows={rows} getRowKey={(r) => r.reasonId} />
             </CardContent>
           </Card>
         </div>

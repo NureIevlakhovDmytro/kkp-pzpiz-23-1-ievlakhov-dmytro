@@ -16,16 +16,18 @@ export interface Column<T> {
   className?: string;
 }
 
-export function DataTable<T extends { id: string }>({
+export function DataTable<T>({
   columns,
   rows,
   loading,
   empty,
+  getRowKey,
 }: {
   columns: Column<T>[];
   rows: T[];
   loading?: boolean;
   empty?: string;
+  getRowKey?: (row: T, index: number) => string | number;
 }) {
   return (
     <div className="rounded-lg border border-border bg-card">
@@ -62,7 +64,7 @@ export function DataTable<T extends { id: string }>({
           ) : (
             rows.map((row, i) => (
               <TableRow
-                key={row.id}
+                key={getRowKey ? getRowKey(row, i) : ((row as { id?: string | number }).id ?? i)}
                 className="animate-in fade-in slide-in-from-bottom-1"
                 style={{ animationDelay: `${i * 25}ms` }}
               >
