@@ -8,12 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { EntitySelect } from '@/components/data/entity-select';
-import { ApiError } from '@/lib/api-client';
+import { ApiError, apiUrl } from '@/lib/api-client';
 import { getToken } from '@/lib/token-store';
 import { settingsApi } from './settings.api';
 
 const ENTITIES = ['categories', 'units', 'suppliers', 'storage-locations', 'currencies'];
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
 export function MaintenancePanel() {
   const { t } = useTranslation();
@@ -31,7 +30,7 @@ export function MaintenancePanel() {
   }
   async function download() {
     try {
-      const res = await fetch(`${API_BASE}${settingsApi.exportUrl(entity, format)}`, {
+      const res = await fetch(apiUrl(settingsApi.exportUrl(entity, format)), {
         headers: { Authorization: `Bearer ${getToken() ?? ''}` },
       });
       if (!res.ok) {

@@ -2,6 +2,10 @@ import { getToken, clearToken } from './token-store';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000/api';
 
+export function apiUrl(path: string): string {
+  return `${BASE_URL}${path}`;
+}
+
 export class ApiError extends Error {
   constructor(public code: string, message: string, public status: number, public details?: unknown) {
     super(message);
