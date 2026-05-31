@@ -10,6 +10,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   const cfg = loadConfig();
+  app.enableCors({
+    origin: cfg.webOrigin,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key'],
+  });
   const swagger = new DocumentBuilder()
     .setTitle('Warehouse API')
     .setVersion('3')

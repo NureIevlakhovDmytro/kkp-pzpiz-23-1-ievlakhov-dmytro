@@ -1,5 +1,6 @@
 export interface AppConfig {
   apiPort: number;
+  webOrigin: string;
   db: { host: string; port: number; user: string; password: string; database: string };
   jwt: { secret: string; expiresIn: string };
   admin: { email: string; password: string; name: string };
@@ -13,6 +14,7 @@ export function loadConfig(): AppConfig {
   };
   return {
     apiPort: Number(process.env.API_PORT ?? 3000),
+    webOrigin: process.env.WEB_ORIGIN ?? 'http://localhost:3001',
     db: {
       host: process.env.POSTGRES_HOST ?? 'localhost',
       port: Number(process.env.POSTGRES_PORT ?? 5432),
