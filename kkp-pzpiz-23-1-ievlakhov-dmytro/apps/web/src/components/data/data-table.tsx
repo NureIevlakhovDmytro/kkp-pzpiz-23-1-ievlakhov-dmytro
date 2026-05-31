@@ -8,6 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 export interface Column<T> {
   key: string;
@@ -30,12 +31,18 @@ export function DataTable<T>({
   getRowKey?: (row: T, index: number) => string | number;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-card">
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-transparent">
             {columns.map((c) => (
-              <TableHead key={c.key} className={c.className}>
+              <TableHead
+                key={c.key}
+                className={cn(
+                  'sticky top-0 z-10 border-b border-border bg-muted/60 backdrop-blur supports-[backdrop-filter]:bg-muted/60',
+                  c.className,
+                )}
+              >
                 {c.header}
               </TableHead>
             ))}
@@ -65,7 +72,7 @@ export function DataTable<T>({
             rows.map((row, i) => (
               <TableRow
                 key={getRowKey ? getRowKey(row, i) : ((row as { id?: string | number }).id ?? i)}
-                className="animate-in fade-in slide-in-from-bottom-1"
+                className="animate-in fade-in slide-in-from-bottom-1 hover:bg-muted/50"
                 style={{ animationDelay: `${i * 25}ms` }}
               >
                 {columns.map((c) => (
