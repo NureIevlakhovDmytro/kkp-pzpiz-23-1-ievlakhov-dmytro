@@ -1,0 +1,7 @@
+{
+  "nav": { "dashboard": "Overview", "products": "Products", "batches": "Batches", "stock": "Stock", "receipts": "Receipts", "transfers": "Transfers", "writeOffs": "Write-offs", "inventory": "Inventory", "reports": "Reports", "notifications": "Notifications", "admin": "Users", "settings": "Settings" },
+  "common": { "create": "Create", "edit": "Edit", "archive": "Archive", "cancel": "Cancel", "save": "Save", "search": "Search", "actions": "Actions", "confirm": "Confirm", "yes": "Yes", "no": "No", "loading": "Loading…", "empty": "No data" },
+  "auth": { "title": "Warehouse", "email": "Email", "password": "Password", "signIn": "Sign in", "signingIn": "Signing in…", "logout": "Log out" },
+  "dashboard": { "subtitle": "Warehouse overview", "lowStock": "Critical stock", "nearExpiry": "Expiring soon", "recentOps": "Recent operations" },
+  "products": { "title": "Products", "subtitle": "Stock-keeping items", "name": "Name", "sku": "SKU", "unit": "Unit", "category": "Category", "minStock": "Min. stock", "status": "Status", "active": "Active", "archived": "Archived", "new": "New product", "edit": "Edit product", "archiveConfirm": "Archive this product?" }
+}

@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import type { LoginResponse, MeDto } from '@app/shared';
 import { apiFetch } from '@/lib/api-client';
 import { clearToken, getToken, setToken } from '@/lib/token-store';
+import i18n from '@/i18n';
 
 interface AuthState {
   user: MeDto | null;
@@ -25,7 +26,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     try {
-      setUser(await apiFetch<MeDto>('/auth/me'));
+      const me = await apiFetch<MeDto>('/auth/me');
+      setUser(me);
+      void i18n.changeLanguage(me.locale);
     } catch {
       setUser(null);
     } finally {
