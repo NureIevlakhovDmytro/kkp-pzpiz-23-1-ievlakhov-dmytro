@@ -11,7 +11,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { EntitySelect } from '@/components/data/entity-select';
 import { PageHeader } from '@/components/data/page-header';
 import { ApiError } from '@/lib/api-client';
-import { useSettings, useSettingsMutation, useCurrencies } from './use-settings';
+import { useCurrencies } from '@/lib/use-currencies';
+import { useSettings, useSettingsMutation } from './use-settings';
 import { CurrenciesPanel } from './currencies-panel';
 import { ExchangeRatesPanel } from './exchange-rates-panel';
 import { MaintenancePanel } from './maintenance-panel';
@@ -20,7 +21,7 @@ export function SettingsPage() {
   const { t } = useTranslation();
   const { data } = useSettings();
   const save = useSettingsMutation();
-  const { data: currencies } = useCurrencies();
+  const { options: currencyOptions } = useCurrencies();
   const [form, setForm] = useState({
     nearExpiryDays: 7,
     lowStockCheckEnabled: true,
@@ -38,7 +39,6 @@ export function SettingsPage() {
         backupSchedule: data.backupSchedule ?? '',
       });
   }, [data]);
-  const currencyOptions = (currencies?.items ?? []).map((c) => ({ value: c.id, label: c.code }));
 
   async function onSave() {
     try {

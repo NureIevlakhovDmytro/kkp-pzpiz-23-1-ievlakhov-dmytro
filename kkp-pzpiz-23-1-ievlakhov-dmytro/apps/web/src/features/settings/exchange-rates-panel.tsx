@@ -12,13 +12,14 @@ import { DataTable, type Column } from '@/components/data/data-table';
 import { EntitySelect } from '@/components/data/entity-select';
 import { ConfirmDialog } from '@/components/data/confirm-dialog';
 import { ApiError } from '@/lib/api-client';
-import { useCurrencies, useRates, useRateMutations } from './use-settings';
+import { useCurrencies } from '@/lib/use-currencies';
+import { useRates, useRateMutations } from './use-settings';
 
 const ALL = '__all__';
 
 export function ExchangeRatesPanel() {
   const { t } = useTranslation();
-  const { data: currencies } = useCurrencies();
+  const { options: currencyOptions, currencyName } = useCurrencies();
   const [filter, setFilter] = useState(ALL);
   const { data, isLoading } = useRates(filter === ALL ? undefined : filter);
   const { create, remove } = useRateMutations();
@@ -29,8 +30,6 @@ export function ExchangeRatesPanel() {
     rateToBase: 0,
     effectiveDate: new Date().toISOString().slice(0, 10),
   });
-  const currencyOptions = (currencies?.items ?? []).map((c) => ({ value: c.id, label: c.code }));
-  const currencyName = Object.fromEntries((currencies?.items ?? []).map((c) => [c.id, c.code]));
 
   async function onCreate() {
     try {

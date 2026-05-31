@@ -16,9 +16,6 @@ export function useSettingsMutation() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['settings'] }),
   });
 }
-export function useCurrencies() {
-  return useQuery({ queryKey: ['currencies'], queryFn: () => settingsApi.currencies() });
-}
 export function useCurrencyMutations() {
   const qc = useQueryClient();
   const invalidate = () => void qc.invalidateQueries({ queryKey: ['currencies'] });

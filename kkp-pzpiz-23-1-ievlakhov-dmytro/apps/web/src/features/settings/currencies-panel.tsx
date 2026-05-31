@@ -10,11 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DataTable, type Column } from '@/components/data/data-table';
 import { ApiError } from '@/lib/api-client';
-import { useCurrencies, useCurrencyMutations } from './use-settings';
+import { useCurrencies } from '@/lib/use-currencies';
+import { useCurrencyMutations } from './use-settings';
 
 export function CurrenciesPanel() {
   const { t } = useTranslation();
-  const { data, isLoading } = useCurrencies();
+  const { items, isLoading } = useCurrencies();
   const { create } = useCurrencyMutations();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ code: '', name: '', symbol: '' });
@@ -48,7 +49,7 @@ export function CurrenciesPanel() {
           {t('settings.newCurrency')}
         </Button>
       </div>
-      <DataTable columns={columns} rows={data?.items ?? []} loading={isLoading} empty={t('common.empty')} />
+      <DataTable columns={columns} rows={items} loading={isLoading} empty={t('common.empty')} />
       <Dialog open={open} onOpenChange={(o) => !o && setOpen(false)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
