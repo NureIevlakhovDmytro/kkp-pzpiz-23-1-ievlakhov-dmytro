@@ -8,12 +8,14 @@ import { DocStatusBadge } from '@/components/data/doc-status-badge';
 import { ReverseButton } from '@/components/data/reverse-button';
 import { DataTable, type Column } from '@/components/data/data-table';
 import { useLookups } from '@/lib/use-lookups';
+import { useBatchLabels } from '@/lib/use-batches';
 import { useTransferMutations } from './use-transfers';
 import { transfersApi } from './transfers.api';
 
 export function TransferDetail({ doc, onClose }: { doc: TransferDto | null; onClose: () => void }) {
   const { t } = useTranslation();
   const { locationName } = useLookups();
+  const { batchLabel } = useBatchLabels();
   const { reverse } = useTransferMutations();
   const { data: full } = useQuery({
     queryKey: ['transfers', doc?.id],
@@ -23,7 +25,7 @@ export function TransferDetail({ doc, onClose }: { doc: TransferDto | null; onCl
   if (!doc) return null;
   const lines = full?.lines ?? [];
   const columns: Column<TransferDto['lines'][number]>[] = [
-    { key: 'batchId', header: t('transfers.batch'), cell: (l) => <span className="nums">{l.batchId.slice(0, 8)}…</span> },
+    { key: 'batchId', header: t('transfers.batch'), cell: (l) => batchLabel[l.batchId] ?? l.batchId },
     { key: 'quantity', header: t('transfers.quantity'), className: 'text-right', cell: (l) => <span className="nums">{l.quantity}</span> },
   ];
   return (

@@ -11,10 +11,12 @@ import { StatusBadge } from '@/components/data/status-badge';
 import { ConfirmDialog } from '@/components/data/confirm-dialog';
 import { PageHeader } from '@/components/data/page-header';
 import { ApiError } from '@/lib/api-client';
+import { useBatchLabels } from '@/lib/use-batches';
 import { useInventory, useInventoryMutations, useInventoryReport } from './use-inventory';
 
 export function InventoryCount({ id }: { id: string }) {
   const { t } = useTranslation();
+  const { batchLabel } = useBatchLabels();
   const { data: inv, isLoading } = useInventory(id);
   const isCompleted = inv?.status === InventoryStatus.COMPLETED;
   const { patch, complete } = useInventoryMutations(id);
@@ -80,7 +82,7 @@ export function InventoryCount({ id }: { id: string }) {
               const disc = actual === '' || actual === undefined ? null : Number(actual) - l.expectedQty;
               return (
                 <TableRow key={l.id}>
-                  <TableCell className="nums">{l.batchId.slice(0, 8)}…</TableCell>
+                  <TableCell>{batchLabel[l.batchId] ?? l.batchId}</TableCell>
                   <TableCell className="nums text-right">{l.expectedQty}</TableCell>
                   <TableCell className="text-right">
                     {draft

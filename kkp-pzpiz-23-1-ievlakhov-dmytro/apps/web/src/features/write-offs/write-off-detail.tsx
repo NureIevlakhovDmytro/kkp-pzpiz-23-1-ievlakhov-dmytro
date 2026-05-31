@@ -8,12 +8,14 @@ import { ReverseButton } from '@/components/data/reverse-button';
 import { DataTable, type Column } from '@/components/data/data-table';
 import { DocumentStatus } from '@app/shared';
 import { useLookups } from '@/lib/use-lookups';
+import { useBatchLabels } from '@/lib/use-batches';
 import { useWriteOffMutations } from './use-write-offs';
 import { writeOffsApi } from './write-offs.api';
 
 export function WriteOffDetail({ doc, onClose }: { doc: WriteOffDto | null; onClose: () => void }) {
   const { t } = useTranslation();
   const { locationName } = useLookups();
+  const { batchLabel } = useBatchLabels();
   const { reverse } = useWriteOffMutations();
   const { data: full } = useQuery({
     queryKey: ['write-offs', doc?.id],
@@ -23,7 +25,7 @@ export function WriteOffDetail({ doc, onClose }: { doc: WriteOffDto | null; onCl
   if (!doc) return null;
   const lines = full?.lines ?? [];
   const columns: Column<WriteOffDto['lines'][number]>[] = [
-    { key: 'batchId', header: t('writeOffs.batch'), cell: (l) => <span className="nums">{l.batchId.slice(0, 8)}…</span> },
+    { key: 'batchId', header: t('writeOffs.batch'), cell: (l) => batchLabel[l.batchId] ?? l.batchId },
     { key: 'locationId', header: t('writeOffs.location'), cell: (l) => locationName[l.locationId] ?? '—' },
     { key: 'quantity', header: t('writeOffs.quantity'), className: 'text-right', cell: (l) => <span className="nums">{l.quantity}</span> },
   ];
