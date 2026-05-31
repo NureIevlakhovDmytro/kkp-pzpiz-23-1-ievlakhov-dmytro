@@ -25,7 +25,10 @@
     "web:dev": "npm run dev -w @app/web",
     "web:build": "dotenv -e .env -- npm run build -w @app/web",
     "web:lint": "npm run lint -w @app/web",
-    "web:test": "npm run test -w @app/web"
+    "web:test": "npm run test -w @app/web",
+    "mobile:start": "npm run build:shared && npm run start -w @app/mobile",
+    "mobile:lint": "npm run lint -w @app/mobile",
+    "mobile:test": "npm run test -w @app/mobile"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.0",
