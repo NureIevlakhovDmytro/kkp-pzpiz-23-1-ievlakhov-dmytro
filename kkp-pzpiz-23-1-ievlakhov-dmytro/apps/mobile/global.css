@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 20% 98%;
+  --foreground: 222 25% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 25% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 25% 11%;
+  --primary: 243 64% 57%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 210 16% 96%;
+  --muted-foreground: 216 16% 37%;
+  --accent: 243 52% 96%;
+  --accent-foreground: 243 55% 42%;
+  --border: 214 20% 90%;
+  --input: 214 20% 90%;
+  --ring: 243 64% 57%;
+  --danger: 0 72% 50%;
+  --warning: 32 90% 42%;
+  --info: 217 80% 50%;
+  --success: 152 54% 36%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 225 14% 8%;
+    --foreground: 210 20% 92%;
+    --card: 225 13% 11%;
+    --card-foreground: 210 20% 92%;
+    --popover: 225 13% 12%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 243 75% 68%;
+    --primary-foreground: 225 14% 8%;
+    --muted: 222 12% 16%;
+    --muted-foreground: 215 14% 62%;
+    --accent: 243 38% 20%;
+    --accent-foreground: 210 30% 94%;
+    --border: 220 12% 20%;
+    --input: 220 12% 20%;
+    --ring: 243 75% 68%;
+    --danger: 0 72% 62%;
+    --warning: 32 90% 56%;
+    --info: 217 85% 65%;
+    --success: 152 48% 50%;
+  }
+}
