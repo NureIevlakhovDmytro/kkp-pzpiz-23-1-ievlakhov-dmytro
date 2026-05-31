@@ -22,6 +22,11 @@
     "catalog": "Catalog",
     "administration": "Administration"
   },
+  "command": {
+    "placeholder": "Go to…",
+    "empty": "No results",
+    "hint": "to navigate"
+  },
   "common": {
     "create": "Create",
     "edit": "Edit",
