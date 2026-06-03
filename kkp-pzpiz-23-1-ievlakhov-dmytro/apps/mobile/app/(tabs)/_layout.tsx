@@ -12,7 +12,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="stock" options={{ title: t('nav.stock') }} />
       <Tabs.Screen name="operations" options={{ title: t('nav.operations', 'Операції'), headerShown: false }} />
-      <Tabs.Screen name="inventory" options={{ title: t('nav.inventory') }} />
+      <Tabs.Screen name="inventory" options={{ title: t('nav.inventory'), headerShown: false }} />
       <Tabs.Screen name="notifications" options={{ title: t('nav.notifications') }} />
       <Tabs.Screen name="more" options={{ title: t('nav.more', 'Ще') }} />
     </Tabs>
